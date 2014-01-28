@@ -15,6 +15,7 @@ class Auth extends \GoWeb\ClientAPI\Query
     const ERROR_EMAIL_NOT_CONFIRMED                     = 4;
     const ERROR_CLIENT_VERSION_NOT_SUPPORTED            = 5;
     const ERROR_NO_ACTIVE_SERVICES_FOUND                = 6;
+    
     public function setIp($ip)
     {
         $this->setParam('ip', $ip);
@@ -34,6 +35,12 @@ class Auth extends \GoWeb\ClientAPI\Query
     {
         $this->setParam('remember', (int) $remember );
 
+        return $this;
+    }
+    
+    public function setAPIKey($apiKey)
+    {
+        $this->setParam('api_key', $apiKey);
         return $this;
     }
 

@@ -26,6 +26,18 @@ class Register extends \GoWeb\ClientAPI\Query
 
         return $this;
     }
+    
+    public function setAPIKey($apiKey)
+    {
+        $this->setParam('api_key', $apiKey);
+        return $this;
+    }
+    
+    public function setAgent($agent)
+    {
+        $this->setParam('agent', $agent);
+        return $this;
+    }
 
     public function send()
     {
