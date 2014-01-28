@@ -1,0 +1,25 @@
+{
+    "name": "goweb/php-clientapi",
+    "description": "API for comunication between desktop or mobile clients and service platform",
+    "license": "Commercial",
+    "authors": [
+        {
+            "name": "Dmytro Sokil",
+            "email": "dmytro.sokil@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "GoWeb": "src/"
+        }
+    },
+    "repositories": [
+    {
+        "type": "git",
+        "url": "https://github.com/gowebdev/php-api.git"
+    }],
+    "require": {
+        "guzzle/guzzle": "3.7.*",
+        "goweb/php-api": "dev-master"
+    }
+}
