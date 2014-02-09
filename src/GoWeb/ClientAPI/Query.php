@@ -261,8 +261,6 @@ class Query
             $request = $this->getRequest();
             $response = $request->send();
             
-            echo $response;
-            
             // log request and response
             if($this->getClientAPI()->hasLogger()) {
                 $this->getClientAPI()->getLogger()
