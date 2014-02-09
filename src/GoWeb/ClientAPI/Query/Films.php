@@ -6,20 +6,15 @@ class Films extends \GoWeb\ClientAPI\Query
 {
     protected $_url = 'vod/feed';
 
-    protected $_responseModel = '\GoWeb\Api\Model\Media\FilmList';
-    
-    protected $_cache = true;
+    protected $_responseModelClassname = '\GoWeb\Api\Model\Media\FilmList';
     
     protected $_cacheExpire = 7200;
     
-    public function byID( $id )
+    public function byId($id)
     {
-        if( is_array($id) )
-        {
+        if(is_array($id)) {
             $this->setParam('id', implode(',', $id) ); 
-        }
-        else
-        {
+        } else {
             $this->setParam('id', $id ); 
         }
 

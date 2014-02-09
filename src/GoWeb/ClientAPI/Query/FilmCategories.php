@@ -6,7 +6,7 @@ class FilmCategories extends \GoWeb\ClientAPI\Query
 {
     protected $_url = 'vod/genres';
 
-    protected $_responseModel = '\GoWeb\Api\Model\Media\FilmCategories';
+    protected $_responseModelClassname = '\GoWeb\Api\Model\Media\FilmCategories';
     
-    protected $_cache = true;
+    protected $_revalidate = self::REVALIDATE_SKIP;
 }

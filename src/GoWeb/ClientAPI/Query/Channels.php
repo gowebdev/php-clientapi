@@ -6,9 +6,9 @@ class Channels extends \GoWeb\ClientAPI\Query
 {
     protected $_url = 'channels/list';
     
-    protected $_responseModel = '\GoWeb\Api\Model\Media\ChannelList'; 
+    protected $_responseModelClassname = '\GoWeb\Api\Model\Media\ChannelList'; 
     
-    protected $_cache = true;
+    protected $_revalidate = self::REVALIDATE_SKIP;
     
     protected $_cacheExpire = 3600;
     

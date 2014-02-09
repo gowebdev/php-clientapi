@@ -6,7 +6,7 @@ class Auth extends \GoWeb\ClientAPI\Query
 {
     protected $_url = 'users/authorize';
 
-    protected $_responseModel = 'GoWeb\Api\Model\Client';
+    protected $_responseModelClassname = 'GoWeb\Api\Model\Client';
 
     const ERROR_NONE                                    = 0;
     const ERROR_GENERIC_SERVER_ERROR                    = 1;
@@ -87,7 +87,7 @@ class Auth extends \GoWeb\ClientAPI\Query
         /**
          * Set active user
          */
-        $this->_clientAPI->setActiveUser($activeUser);
+        $this->getClientAPI()->setActiveUser($activeUser);
 
         return $activeUser;
     }

@@ -2,54 +2,69 @@
 
 namespace GoWeb\ClientAPI;
 
-abstract class Query
+class Query
 {
     const REQUEST_METHOD_GET    = 'GET';
     const REQUEST_METHOD_POST   = 'POST';
     const REQUEST_METHOD_PUT    = 'PUT';
     const REQUEST_METHOD_DELETE = 'DELETE';
 
+    /**
+     * Revalidation request is never sent, and the response is always served from the origin server
+     */
+    const REVALIDATE_NEVER  = 'vever';
+    
+    /**
+     * Always revalidate
+     */
+    const REVALIDATE_ALWAYS = 'always';
+    
+    /**
+     * Never revalidate and uses the response stored in the cache
+     */
+    const REVALIDATE_SKIP   = 'skip';
+    
     protected $_requestMethod = self::REQUEST_METHOD_GET;
 
     protected $_url;
 
-    protected $_query = array();
+    private $_query = array();
 
-    protected $_headers = array();
+    private $_headers = array();
 
-    protected $_responseModel = 'GoWeb\Api\Model';
+    protected $_responseModelClassname = 'GoWeb\Api\Model';
 
-    protected $_rawResponse;
-    
     /**
      *
-     * @var booleand cache switcher
+     * @var \Guzzle\Http\Message\RequestInterface
      */
-    protected $_cache = false;
+    private $_request;
     
-    /**
-     *
-     * @var int cache interval. If value greater than (30 * 24 * 60 * 60) - value is Unix timestamp
-     */
-    protected $_cacheExpire = 43200;
+    private $_rawResponse;
     
-    /**
-     *
-     * @var mixed variable, used to store cache results
-     */
-    private $_cachedValue;
+    private $_model;
+    
+    protected $_revalidate = self::REVALIDATE_ALWAYS;
+    
+    protected $_cacheExpire = 3600;
 
     /**
      *
      * @var \GoWeb\ClientAPI
      */
-    protected $_clientAPI;
+    private $_clientAPI;
 
     public function __construct(\GoWeb\ClientAPI $api)
     {
         $this->_clientAPI = $api;
 
+        // language
         $this->addHeader('Accept-Language', $api->getLanguage());
+        
+        // cache
+        $this
+            ->setRevalidate($this->_revalidate)
+            ->setCacheExpireTime($this->_cacheExpire);
 
         $this->init();
     }
@@ -61,10 +76,16 @@ abstract class Query
     {
 
     }
-
+    
     public function getClientAPI()
     {
         return $this->_clientAPI;
+    }
+
+    public function setUrl($url) 
+    {
+        $this->_url = $url;
+        return $this;
     }
 
     public function addHeader($name, $value)
@@ -153,45 +174,56 @@ abstract class Query
 
         return $this;
     }
-
-    public function getRawResponse()
-    {
-        return $this->_rawResponse;
+    
+    public function alwaysRevalidate() {
+        $this->setRevalidate(self::REVALIDATE_ALWAYS);
+        return $this;
     }
     
-    public function getValidateErrors() 
-    {
-        if(empty($this->_rawResponse['validate_errors'])) {
-            return array();
-        }
-        
-        return $this->_rawResponse['validate_errors'];
-    }
-
-    protected function _getCacheKey()
-    {
-        $key = implode(' ', array(
-            $this->_requestMethod,
-            $this->_url,
-            $this->getRequest()->getQuery(),
-            $this->_clientAPI->getLanguage()
-        ));
-        
-        return strlen($key) . md5($key);
+    public function skipRevalidate() {
+        $this->setRevalidate(self::REVALIDATE_SKIP);
+        return $this;
     }
     
+    public function neverRevalidate() {
+        $this->setRevalidate(self::REVALIDATE_NEVER);
+        return $this;
+    }
+    
+    public function setRevalidate($revalidate)
+    {
+        $this->_revalidate = $revalidate;
+        $this->getRequest()->getParams()->set('cache.revalidate', $revalidate);
+        return $this;
+    }
+    
+    public function setCacheExpireTime($time)
+    {
+        $this->_cacheExpire = (int) $time;
+        $this->getRequest()->getParams()->set('cache.override_ttl', $this->_cacheExpire);
+        
+        return $this;
+    }
+    
+    /**
+     * 
+     * @return \Guzzle\Http\Message\RequestInterface
+     */
     public function getRequest()
     {
+        if($this->_request) {
+            return $this->_request;
+        }
+        
         // send token
         if($this->_clientAPI->isUserAuthorised()) {
             $this->_headers['X-Auth-Token'] = $this->_clientAPI->getActiveUser()->getToken();
         }
 
         // create request
-        $request = $this->_clientAPI
+        $this->_request = $this->_clientAPI
             ->getConnection()
-            ->createRequest
-            (
+            ->createRequest(
                 $this->_requestMethod,
                 $this->_url,
                 $this->_headers,
@@ -203,44 +235,18 @@ abstract class Query
             );
 
         // set query params
-        $request->getQuery()->replace($this->_query);
+        $this->_request->getQuery()->replace($this->_query);
         
-        return $request;
+        return $this->_request;
     }
     
-    public function send() 
-    {
-        if(!$this->isCacheEnabled()) {
-            return $this->sendOmittingCache();
-        }
-        
-        if($this->_cachedValue) {
-            return $this->_cachedValue;
-        }
-        
-        $cacheKey = $this->_getCacheKey();
-        
-        // get from cache
-        $cachedValue = $this->getCacheAdapter()->get($cacheKey);
-
-        // get from remote server and set to cache
-        if($cachedValue) {
-            $cachedValue = unserialize($cachedValue);
-        }
-        else {
-            $cachedValue = $this->sendOmittingCache();
-            $this->getCacheAdapter()->set(
-                $cacheKey, 
-                serialize($cachedValue), 
-                $this->_cacheExpire
-            );
-        }
-        
-        $this->_cachedValue = $cachedValue;
-        return $this->_cachedValue;
-    }
-    
-    protected function sendOmittingCache()
+    /**
+     * 
+     * @return \GoWeb\Api\Model
+     * @throws \GoWeb\ClientAPI\Query\Exception\Forbidden
+     * @throws \GoWeb\ClientAPI\Query\Exception\Common
+     */
+    public function send()
     {
         // try to auth if not yet authorised
         if(!$this->_clientAPI->isUserAuthorised()) {
@@ -252,7 +258,16 @@ abstract class Query
         
         // get response
         try {
-            $response = $this->getRequest()->send();
+            $request = $this->getRequest();
+            $response = $request->send();
+            
+            echo $response;
+            
+            // log request and response
+            if($this->getClientAPI()->hasLogger()) {
+                $this->getClientAPI()->getLogger()
+                    ->debug((string) $request . '<br/></br/>' . (string) $response);
+            }
         }
         catch(\Guzzle\Http\Exception\BadResponseException $e) {
             switch($e->getResponse()->getStatusCode())
@@ -267,47 +282,54 @@ abstract class Query
         catch(\Exception $e) {
             throw new \GoWeb\ClientAPI\Query\Exception\Common($e->getMessage());
         }
-
-        $this->_rawResponse = $response->json();
-
-        // throw exception if error exists
-        if(1 == $this->_rawResponse['error']) {
-            $errorMessage = isset($this->_rawResponse['errorMessage'])
-                ? $this->_rawResponse['errorMessage'] 
-                : null;
-            
-            throw new \GoWeb\ClientAPI\Query\Exception\Common($errorMessage);
-        }
-
-        return new $this->_responseModel($this->_rawResponse);
+        
+        $this->_rawResponse = $response;
+        
+        return $this->getModel();
     }
     
     /**
      * 
-     * @return \GoWeb\ICacheAdapter 
+     * @return \Guzzle\Http\Message\Response
      */
-    public function getCacheAdapter()
+    public function getRawResponse()
     {
-        return $this->getClientAPI()->getCacheAdapter();
+        return $this->_rawResponse;
     }
     
-    public function isCacheEnabled()
+    /**
+     * 
+     * @return \GoWeb\Api\Model
+     * @throws \GoWeb\ClientAPI\Query\Exception\Common
+     */
+    public function getModel()
     {
-        return $this->_cache && $this->getCacheAdapter();
+        if(!$this->_model) {
+            $jsonResponse = $this->_rawResponse->json();
+            
+            // throw exception if error exists
+            if(1 == $jsonResponse['error']) {
+                $errorMessage = isset($jsonResponse['errorMessage'])
+                    ? $jsonResponse['errorMessage'] 
+                    : null;
+
+                throw new \GoWeb\ClientAPI\Query\Exception\Common($errorMessage);
+            }
+
+            $this->_model = new $this->_responseModelClassname($jsonResponse);
+        }
+        
+        return $this->_model;
     }
     
-    public function enableCache() {
-        $this->_cache = true;
-        return $this;
-    }
-    
-    public function disableCache() {
-        $this->_cache = false;
-        return $this;
-    }
-    
-    public function setCacheExpireTime($time) {
-        $this->_cacheExpire = (int) $time;
-        return $this;
+    public function getValidateErrors() 
+    {
+        $jsonResponse = $this->_rawResponse->json();
+        
+        if(empty($jsonResponse['validate_errors'])) {
+            return array();
+        }
+        
+        return $jsonResponse['validate_errors'];
     }
 }

@@ -4,7 +4,9 @@ namespace GoWeb;
 
 use Guzzle\Http\Client;
 
-use GoWeb\ClientAPI\ICacheAdapter;
+use \Guzzle\Cache\CacheAdapterInterface;
+use \Guzzle\Plugin\Cache\CachePlugin;
+use \Guzzle\Plugin\Cache\DefaultCacheStorage;
 
 class ClientAPI
 {
@@ -16,24 +18,51 @@ class ClientAPI
     
     private $_connection;
 
-    /**
-     *
-     * @var \GoWeb\ClientAPI\ICacheAdapter
-     */
-    private $_cacheAdapter;
-
     private $_language;
+    
+    private $_logger;
 
     public function __construct(array $options = null)
     {
         // configure api
         if($options) {
+            
+            // server url
             if(isset($options['apiServerUrl'])) {
                 $this->setAPIServerUrl($options['apiServerUrl']);
+            }
+            
+            // cache
+            if(isset($options['cacheAdapter']) && $options['cacheAdapter'] instanceof CacheAdapterInterface) {
+                $this->setCacheAdapter($options['cacheAdapter']);
             }
         }
     }
 
+    public function getAPIServerUrl()
+    {
+        return $this->_apiServerUrl;
+    }
+
+    public function setAPIServerUrl($newUrl)
+    {
+        $this->_apiServerUrl = $newUrl;
+    }
+
+    /**
+     * @param \Guzzle\Cache\CacheAdapterInterface $adapter
+     * @return \GoWeb\ClientAPI
+     * @link http://guzzle.readthedocs.org/en/latest/plugins/cache-plugin.html
+     */
+    public function setCacheAdapter(CacheAdapterInterface $adapter)
+    {
+        $this->getConnection()->addSubscriber(new CachePlugin(array(
+            'storage'   => new DefaultCacheStorage($adapter),
+        )));
+        
+        return $this;
+    }
+    
     /**
      *
      * @param string $lang lang identifier compatible with Accept-Language header
@@ -46,32 +75,6 @@ class ClientAPI
     public function getLanguage()
     {
         return $this->_language;
-    }
-
-    public function setCacheAdapter(ICacheAdapter $cahce)
-    {
-        $this->_cacheAdapter = $cahce;
-
-        return $this;
-    }
-
-    /**
-     *
-     * @return \GoWeb\ClientAPI\ICacheAdapter
-     */
-    public function getCacheAdapter()
-    {
-        return $this->_cacheAdapter;
-    }
-
-    public function getAPIServerUrl()
-    {
-        return $this->_apiServerUrl;
-    }
-
-    public function setAPIServerUrl($newUrl)
-    {
-        $this->_apiServerUrl = $newUrl;
     }
 
     /**
@@ -162,5 +165,25 @@ class ClientAPI
     public function logout()
     {
         $this->_activeUser = null;
+    }
+    
+     public function setLogger(\Psr\Log\LoggerInterface $logger)
+    {
+        $this->_logger = $logger;
+        return $this;
+    }
+    
+    /**
+     * 
+     * @return \Psr\Log\LoggerInterface
+     */
+    public function getLogger()
+    {
+        return $this->_logger;
+    }
+    
+    public function hasLogger()
+    {
+        return (bool) $this->_logger;
     }
 }

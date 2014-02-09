@@ -2,8 +2,12 @@
 
 namespace GoWeb\ClientAPI\Adapter\Yii;
 
-class ClientAPICache implements \GoWeb\ClientAPI\ICacheAdapter
+class ClientAPICache implements \Guzzle\Cache\CacheAdapterInterface
 {
+    /**
+     *
+     * @var CCache
+     */
     protected $_cache;
     
     protected $_keyPrefix = 'GoWebClientAPI';
@@ -13,17 +17,25 @@ class ClientAPICache implements \GoWeb\ClientAPI\ICacheAdapter
         $this->_cache = \Yii::app()->cache;
     }
     
-    public function set($name, $value, $expire = null)
-    {
-        $expire = $expire ? $expire : 0;
-        
-        $this->_cache->set($this->_keyPrefix . $name, $value, $expire);
+    public function save($id, $value, $expire = null)
+    {        
+        $this->_cache->set($this->_keyPrefix . $id, $value, $expire);
          
         return $this;
     }
     
-    public function get($name)
+    public function fetch($id)
     {
-        return $this->_cache->get($this->_keyPrefix . $name);
+        return $this->_cache->get($this->_keyPrefix . $id);
+    }
+    
+    public function delete($id, array $options = null) 
+    {
+        $this->_cache->delete($this->_keyPrefix . $id);
+    }
+    
+    public function contains($id, array $options = null) 
+    {
+        return false !== $this->get($this->_keyPrefix . $id);
     }
 }

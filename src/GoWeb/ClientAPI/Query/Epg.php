@@ -6,9 +6,9 @@ class Epg extends \GoWeb\ClientAPI\Query
 {
     protected $_url = 'channels/epg';
     
-    protected $_responseModel = '\GoWeb\Api\Model\Media\ChannelPrograms';
+    protected $_responseModelClassname = '\GoWeb\Api\Model\Media\ChannelPrograms';
     
-    protected $_cache = true;
+    protected $_revalidate = self::REVALIDATE_SKIP;
     
     // cache for 10 minutes
     protected $_cacheExpire = 600;
