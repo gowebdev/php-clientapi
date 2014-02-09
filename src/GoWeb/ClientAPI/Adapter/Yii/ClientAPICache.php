@@ -36,6 +36,6 @@ class ClientAPICache implements \Guzzle\Cache\CacheAdapterInterface
     
     public function contains($id, array $options = null) 
     {
-        return false !== $this->fetch($this->_keyPrefix . $id);
+        return false !== $this->get($this->_keyPrefix . $id);
     }
 }
