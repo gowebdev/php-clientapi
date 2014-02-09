@@ -12,7 +12,7 @@ class Query
     /**
      * Revalidation request is never sent, and the response is always served from the origin server
      */
-    const REVALIDATE_NEVER  = 'vever';
+    const REVALIDATE_NEVER  = 'never';
     
     /**
      * Always revalidate
@@ -44,7 +44,7 @@ class Query
     
     private $_model;
     
-    protected $_revalidate = self::REVALIDATE_ALWAYS;
+    protected $_revalidate = self::REVALIDATE_NEVER;
     
     protected $_cacheExpire = 3600;
 
