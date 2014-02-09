@@ -17,14 +17,14 @@ class ClientAPICache implements \Guzzle\Cache\CacheAdapterInterface
         $this->_cache = \Yii::app()->cache;
     }
     
-    public function save($id, $value, $expire = null)
+    public function save($id, $data, $lifeTime = false, array $options = null)
     {        
-        $this->_cache->set($this->_keyPrefix . $id, $value, $expire);
+        $this->_cache->set($this->_keyPrefix . $id, $data, $lifeTime);
          
         return $this;
     }
     
-    public function fetch($id)
+    public function fetch($id, array $options = null)
     {
         return $this->_cache->get($this->_keyPrefix . $id);
     }
@@ -36,6 +36,6 @@ class ClientAPICache implements \Guzzle\Cache\CacheAdapterInterface
     
     public function contains($id, array $options = null) 
     {
-        return false !== $this->get($this->_keyPrefix . $id);
+        return false !== $this->fetch($this->_keyPrefix . $id);
     }
 }
