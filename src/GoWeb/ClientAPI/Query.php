@@ -28,10 +28,6 @@ class Query
 
     protected $_url;
 
-    private $_query = array();
-
-    private $_headers = array();
-
     protected $_responseModelClassname = 'GoWeb\Api\Model';
 
     /**
@@ -77,6 +73,10 @@ class Query
 
     }
     
+    /**
+     * 
+     * @return \GoWeb\ClientAPI
+     */
     public function getClientAPI()
     {
         return $this->_clientAPI;
@@ -85,70 +85,75 @@ class Query
     public function setUrl($url) 
     {
         $this->_url = $url;
+        $this->getRequest()->setPath($url);
         return $this;
     }
 
     public function addHeader($name, $value)
     {
-        $this->_headers[$name] = $value;
+        $this->getRequest()->addHeader($name, $value);
 
         return $this;
     }
 
     public function getHeader($name)
     {
-        return isset($this->_headers[$name]) ? $this->_headers[$name] : null;
+        $this->getRequest()->getHeader($name);
     }
 
     public function getHeaders()
     {
-        return $this->_headers;
+        return $this->getRequest()->getHeaders();
     }
 
     public function setParam($name, $value)
     {
-        $this->_query[$name] = $value;
+        $this->getRequest()->getQuery()->set($name, $value);
 
         return $this;
     }
     
     public function setParams(array $params)
     {
-        $this->_query = $params;
+        $this->getRequest()->getQuery()->replace($params);
         
         return $this;
     }
     
     public function addParams(array $params)
     {
-        $this->_query = array_merge($this->_query, $params);
+        $this->getRequest()->getQuery()->merge($params);
         
         return $this;
     }
 
     public function getParam($name)
     {
-        return isset($this->_query[$name]) ? $this->_query[$name] : null;
+        return $this->getRequest()->getQuery()->get($name);
     }
     
     public function removeParam($name)
     {
-        unset($this->_query[$name]);
+        $this->getRequest()->getQuery()->remove($name);
         return $this;
     }
 
     public function toArray()
     {
-        return $this->_query;
+        return $this->getRequest()->getQuery()->toArray();
     }
 
     public function toJson()
     {
-        return json_encode($this->_query);
+        return json_encode($this->toArray());
     }
 
     public function get()
     {
+        if($this->_request) {
+            throw new \Exception('Request method already set');
+        }
+        
         $this->_requestMethod = self::REQUEST_METHOD_GET;
 
         return $this;
@@ -156,6 +161,10 @@ class Query
 
     public function insert()
     {
+        if($this->_request) {
+            throw new \Exception('Request method already set');
+        }
+        
         $this->_requestMethod = self::REQUEST_METHOD_POST;
 
         return $this;
@@ -163,6 +172,10 @@ class Query
 
     public function update()
     {
+        if($this->_request) {
+            throw new \Exception('Request method already set');
+        }
+        
         $this->_requestMethod = self::REQUEST_METHOD_PUT;
 
         return $this;
@@ -170,6 +183,10 @@ class Query
 
     public function delete()
     {
+        if($this->_request) {
+            throw new \Exception('Request method already set');
+        }
+        
         $this->_requestMethod = self::REQUEST_METHOD_DELETE;
 
         return $this;
@@ -209,15 +226,10 @@ class Query
      * 
      * @return \Guzzle\Http\Message\RequestInterface
      */
-    public function getRequest()
+    private function getRequest()
     {
         if($this->_request) {
             return $this->_request;
-        }
-        
-        // send token
-        if($this->_clientAPI->isUserAuthorised()) {
-            $this->_headers['X-Auth-Token'] = $this->_clientAPI->getActiveUser()->getToken();
         }
 
         // create request
@@ -226,18 +238,19 @@ class Query
             ->createRequest(
                 $this->_requestMethod,
                 $this->_url,
-                $this->_headers,
+                null,
                 null,
                 array(
                     'timeout'         => 5,
                     'connect_timeout' => 2
                 )
             );
-
-        // set query params
-        $this->_request->getQuery()->replace($this->_query);
         
         return $this->_request;
+    }
+    
+    public function __toString() {
+        return (string) $this->getRequest();
     }
     
     /**
@@ -248,17 +261,22 @@ class Query
      */
     public function send()
     {
+        $request = $this->getRequest();
+        
         // try to auth if not yet authorised
         if(!$this->_clientAPI->isUserAuthorised()) {
             if(!($this instanceof \GoWeb\ClientAPI\Query\Auth)) {
                 // use lazy auth if this query is no Query\Auth
-                $this->_clientAPI->auth()->send();
+                $this->_clientAPI->auth()->send();                
             }
+        }
+        
+        if($this->_clientAPI->isUserAuthorised()) {
+            $request->addHeader('X-Auth-Token', $this->_clientAPI->getActiveUser()->getToken());
         }
         
         // get response
         try {
-            $request = $this->getRequest();
             $response = $request->send();
             
             // log request and response

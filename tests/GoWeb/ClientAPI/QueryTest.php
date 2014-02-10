@@ -2,7 +2,8 @@
 
 namespace GoWeb\ClientAPI;
 
-class QueryTest extends \Guzzle\Tests\GuzzleTestCase {
+class QueryTest extends \Guzzle\Tests\GuzzleTestCase 
+{
 
     protected $_clientAPI;
     protected $_query;

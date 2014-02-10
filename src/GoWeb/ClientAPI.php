@@ -104,7 +104,7 @@ class ClientAPI
 
     public function isUserAuthorised()
     {
-        return !!$this->getActiveUser();
+        return (bool) $this->_activeUser;
     }
 
     public function setActiveUser(\GoWeb\Api\Model\Client $user)
@@ -135,8 +135,8 @@ class ClientAPI
     
     public function setCredentials($email, $password)
     {
-        $this->email = $email;
-        $this->_password = $password;
+        $this->_email       = $email;
+        $this->_password    = $password;
         
         return $this;
     }
@@ -158,6 +158,8 @@ class ClientAPI
         if(null !== $this->_email && null !== $this->_password) {
             $authQuery->byEmail($this->_email, $this->_password);
         }
+        
+        echo $authQuery;
         
         return $authQuery;
     }

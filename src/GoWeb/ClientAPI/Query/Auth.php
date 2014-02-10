@@ -56,13 +56,11 @@ class Auth extends \GoWeb\ClientAPI\Query
         /**
          * Send auth request
          */
-        try
-        {
+        try {
             $activeUser = parent::send();
         }
-        catch(\GoWeb\ClientAPI\Query\Exception\Common $e)
-        {
-            $rawResponse = $this->getRawResponse();
+        catch(\GoWeb\ClientAPI\Query\Exception\Common $e) {
+            $response = $this->getRawResponse()->json();
 
             $statusExceptionMap = array
             (
@@ -75,18 +73,19 @@ class Auth extends \GoWeb\ClientAPI\Query
             );
 
             // throw generic exception
-            if(!isset($statusExceptionMap[$rawResponse['status']])) {
-                throw new Auth\Exception('Unknown server error with status code : ' . json_encode($rawResponse)  );
+            if(!isset($statusExceptionMap[$response['status']])) {
+                throw new Auth\Exception('Unknown server error with status code : ' . json_encode($response)  );
             }
 
             // throw defined exception
-            $exceptionClass = '\GoWeb\ClientAPI\Query\Auth\Exception\\' . $statusExceptionMap[$rawResponse['status']];
-            throw new $exceptionClass($rawResponse['errorMessage']);
+            $exceptionClass = '\GoWeb\ClientAPI\Query\Auth\Exception\\' . $statusExceptionMap[$response['status']];
+            throw new $exceptionClass($response['errorMessage']);
         }
 
         /**
          * Set active user
          */
+        echo 'Set active user with token ' . $activeUser->getToken() . PHP_EOL;
         $this->getClientAPI()->setActiveUser($activeUser);
 
         return $activeUser;

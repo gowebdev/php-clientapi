@@ -47,7 +47,7 @@ class Register extends \GoWeb\ClientAPI\Query
         }
         catch(\GoWeb\ClientAPI\Query\Exception\Common $e)
         {
-            $rawResponse = $this->getRawResponse();
+            $response = $this->getRawResponse()->json();
 
             $statusExceptionMap = array
             (
@@ -59,12 +59,13 @@ class Register extends \GoWeb\ClientAPI\Query
             );
 
             // throw generic exception
-            if(!isset($statusExceptionMap[$rawResponse['status']]))
-                throw new Register\Exception('Unknown server error with status code : ' . $rawResponse['status']  );
-
+            if(!isset($statusExceptionMap[$response['status']])) {
+                throw new Register\Exception('Unknown server error with status code : ' . $response['status']  );
+            }
+            
             // throw defined exception
-            $exceptionClass = '\GoWeb\ClientAPI\Query\Register\Exception\\' . $statusExceptionMap[$rawResponse['status']];
-            throw new $exceptionClass($rawResponse['errorMessage']);
+            $exceptionClass = '\GoWeb\ClientAPI\Query\Register\Exception\\' . $statusExceptionMap[$response['status']];
+            throw new $exceptionClass($response['errorMessage']);
         }
 
         return $newUserData;
