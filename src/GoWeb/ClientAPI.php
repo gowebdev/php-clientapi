@@ -6,7 +6,6 @@ use Guzzle\Http\Client;
 
 use \Guzzle\Cache\CacheAdapterInterface;
 use \Guzzle\Plugin\Cache\CachePlugin;
-use \Guzzle\Plugin\Cache\DefaultCacheStorage;
 
 class ClientAPI
 {
@@ -57,7 +56,7 @@ class ClientAPI
     public function setCacheAdapter(CacheAdapterInterface $adapter)
     {
         $this->getConnection()->addSubscriber(new CachePlugin(array(
-            'storage'   => new DefaultCacheStorage($adapter),
+            'storage'   => new CacheStorage($adapter, 'CAPI'),
         )));
         
         return $this;
