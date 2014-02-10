@@ -53,9 +53,6 @@ class Query
     public function __construct(\GoWeb\ClientAPI $api)
     {
         $this->_clientAPI = $api;
-
-        // language
-        $this->addHeader('Accept-Language', $api->getLanguage());
         
         // cache
         $this
@@ -271,9 +268,13 @@ class Query
             }
         }
         
+        // auth
         if($this->_clientAPI->isUserAuthorised()) {
             $request->addHeader('X-Auth-Token', $this->_clientAPI->getActiveUser()->getToken());
         }
+        
+        // language
+        $request->addHeader('Accept-Language', $this->_clientAPI->getLanguage());
         
         // get response
         try {
