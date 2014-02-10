@@ -159,8 +159,6 @@ class ClientAPI
             $authQuery->byEmail($this->_email, $this->_password);
         }
         
-        echo $authQuery;
-        
         return $authQuery;
     }
 

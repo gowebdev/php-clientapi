@@ -85,7 +85,6 @@ class Auth extends \GoWeb\ClientAPI\Query
         /**
          * Set active user
          */
-        echo 'Set active user with token ' . $activeUser->getToken() . PHP_EOL;
         $this->getClientAPI()->setActiveUser($activeUser);
 
         return $activeUser;
