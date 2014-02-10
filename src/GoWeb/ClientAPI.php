@@ -6,6 +6,7 @@ use Guzzle\Http\Client;
 
 use \Guzzle\Cache\CacheAdapterInterface;
 use \Guzzle\Plugin\Cache\CachePlugin;
+use \GoWeb\ClientAPI\CacheStorage;
 
 class ClientAPI
 {
