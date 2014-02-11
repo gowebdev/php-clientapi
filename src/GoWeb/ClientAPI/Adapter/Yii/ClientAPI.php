@@ -8,6 +8,12 @@ class ClientAPI  extends \GoWeb\ClientAPI  implements \IApplicationComponent
     
     public $apiServerUrl;
     
+    /**
+     *
+     * @var boolean is cache enebled
+     */
+    public $cache = false;
+    
     public function init()
     {        
         $this->_initialized = true;
@@ -16,7 +22,9 @@ class ClientAPI  extends \GoWeb\ClientAPI  implements \IApplicationComponent
         $this->setAPIServerUrl( $this->apiServerUrl );
         
         // define cacher
-        $this->setCacheAdapter(new ClientAPICache);
+        if($this->cache) {
+            $this->setCacheAdapter(new ClientAPICache);
+        }
     }  
     
     public function exceptionHandler($event)
