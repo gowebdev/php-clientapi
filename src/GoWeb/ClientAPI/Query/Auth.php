@@ -67,7 +67,10 @@ class Auth extends \GoWeb\ClientAPI\Query
                 $response = $rawResponse->json();
             }
             else {
-                $response = array('status' => self::ERROR_GENERIC_SERVER_ERROR);
+                $response = array(
+                    'status' => self::ERROR_GENERIC_SERVER_ERROR,
+                    'errorMessage'  => $e->getMessage(),
+                );
             }
 
             $statusExceptionMap = array
