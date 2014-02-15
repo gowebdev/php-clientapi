@@ -29,6 +29,12 @@ class Query
     protected $_url;
 
     protected $_responseModelClassname = 'GoWeb\Api\Model';
+    
+    private $_headers = array();
+    
+    private $_query = array();
+    
+    private $_requestOptions = array();
 
     /**
      *
@@ -40,8 +46,16 @@ class Query
     
     private $_model;
     
+    /**
+     *
+     * @var string default revalidate rule
+     */
     protected $_revalidate = self::REVALIDATE_NEVER;
     
+    /**
+     *
+     * @var int default cache expire time
+     */
     protected $_cacheExpire = 3600;
 
     /**
@@ -82,62 +96,125 @@ class Query
     public function setUrl($url) 
     {
         $this->_url = $url;
-        $this->getRequest()->setPath($url);
+        
+        if($this->_request) {
+            $this->_request->setPath($url);
+        }
+        
         return $this;
     }
 
     public function addHeader($name, $value)
     {
-        $this->getRequest()->addHeader($name, $value);
-
+        $this->_headers[$name] = $value;
+        
+        if($this->_request) {
+            $this->_request->addHeader($name, $value);
+        }
+        
         return $this;
     }
 
     public function getHeader($name)
     {
-        $this->getRequest()->getHeader($name);
+        if($this->_request) {
+            return $this->_request->getHeader($name);
+        }
+        else {
+            return isset($this->_headers[$name]) ? $this->_headers[$name] : null;
+        }
     }
 
     public function getHeaders()
     {
-        return $this->getRequest()->getHeaders();
+        return $this->_request ? $this->_request->getHeaders() : $this->_headers;
     }
 
     public function setParam($name, $value)
     {
-        $this->getRequest()->getQuery()->set($name, $value);
-
+        $this->_query[$name] = $value;
+        
+        if($this->_request) {
+            $this->_request->getQuery()->set($name, $value);
+        }
+        
         return $this;
     }
     
     public function setParams(array $params)
     {
-        $this->getRequest()->getQuery()->replace($params);
+        $this->_query = $params;
+        
+        if($this->_request) {
+            $this->_request->getQuery()->replace($params);
+        }
         
         return $this;
     }
     
     public function addParams(array $params)
     {
-        $this->getRequest()->getQuery()->merge($params);
+        $this->_request = array_merge($this->_request , $params);
+        
+        if($this->_request) {
+            $this->_request->getQuery()->merge($params);
+        }
         
         return $this;
     }
 
     public function getParam($name)
     {
-        return $this->getRequest()->getQuery()->get($name);
+        if($this->_request) {
+            return $this->getRequest()->getQuery()->get($name);
+        }
+        else {
+            return isset($this->_query[$name]) ? $this->_query[$name] : null;
+        }
     }
     
     public function removeParam($name)
     {
-        $this->getRequest()->getQuery()->remove($name);
+        unset($this->_query[$name]);
+        
+        if($this->_request) {
+            $this->_request->getQuery()->remove($name);
+        }
+        
+        return $this;
+    }
+    
+    public function setOption($name, $value)
+    {
+        $this->_requestOptions[$name] = $value;
+        
+        if($this->_request) {
+            $this->_request->getParams()->set($name, $value);
+        }
+        
+        return $this;
+    }
+    
+    public function getOption($name)
+    {
+        if($this->_request) {
+            $this->_request->getParams()->get($name);
+        }
+        else {
+            return isset($this->_requestOptions[$name]) ? $this->_requestOptions[$name] : null;
+        }
+        
         return $this;
     }
 
     public function toArray()
     {
-        return $this->getRequest()->getQuery()->toArray();
+        if($this->_request) {
+            return $this->_request->getQuery()->toArray();
+        }
+        else {
+            $this->_query;
+        }
     }
 
     public function toJson()
@@ -147,10 +224,7 @@ class Query
 
     public function get()
     {
-        if($this->_request) {
-            throw new \Exception('Request method already set');
-        }
-        
+        $this->_request = null;        
         $this->_requestMethod = self::REQUEST_METHOD_GET;
 
         return $this;
@@ -158,10 +232,7 @@ class Query
 
     public function insert()
     {
-        if($this->_request) {
-            throw new \Exception('Request method already set');
-        }
-        
+        $this->_request = null;  
         $this->_requestMethod = self::REQUEST_METHOD_POST;
 
         return $this;
@@ -169,10 +240,7 @@ class Query
 
     public function update()
     {
-        if($this->_request) {
-            throw new \Exception('Request method already set');
-        }
-        
+        $this->_request = null;  
         $this->_requestMethod = self::REQUEST_METHOD_PUT;
 
         return $this;
@@ -180,13 +248,15 @@ class Query
 
     public function delete()
     {
-        if($this->_request) {
-            throw new \Exception('Request method already set');
-        }
-        
+        $this->_request = null;  
         $this->_requestMethod = self::REQUEST_METHOD_DELETE;
 
         return $this;
+    }
+    
+    public function getRequestMethod()
+    {
+        return $this->_requestMethod;
     }
     
     public function alwaysRevalidate() {
@@ -206,16 +276,13 @@ class Query
     
     public function setRevalidate($revalidate)
     {
-        $this->_revalidate = $revalidate;
-        $this->getRequest()->getParams()->set('cache.revalidate', $revalidate);
+        $this->setOption('cache.revalidate', $revalidate);
         return $this;
     }
     
     public function setCacheExpireTime($time)
     {
-        $this->_cacheExpire = (int) $time;
-        $this->getRequest()->getParams()->set('cache.override_ttl', $this->_cacheExpire);
-        
+        $this->setOption('cache.override_ttl', (int) $time);
         return $this;
     }
     
@@ -225,24 +292,29 @@ class Query
      */
     private function getRequest()
     {
-        if($this->_request) {
-            return $this->_request;
+        if(!$this->_request) {
+            $this->_request = $this->_clientAPI
+                ->getConnection()
+                ->createRequest(
+                    $this->_requestMethod,
+                    $this->_url,
+                    $this->_headers,
+                    null,
+                    array(
+                        'timeout'         => 5,
+                        'connect_timeout' => 2,
+                    )
+                );
+            
+            if($this->_query) {
+                $this->_request->getQuery()->replace($this->_query);
+            }
+            
+            if($this->_requestOptions) {
+                $this->_request->getParams()->replace($this->_requestOptions);
+            }
         }
 
-        // create request
-        $this->_request = $this->_clientAPI
-            ->getConnection()
-            ->createRequest(
-                $this->_requestMethod,
-                $this->_url,
-                null,
-                null,
-                array(
-                    'timeout'         => 5,
-                    'connect_timeout' => 2
-                )
-            );
-        
         return $this->_request;
     }
     

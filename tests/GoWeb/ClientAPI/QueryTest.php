@@ -43,4 +43,14 @@ class QueryTest extends \Guzzle\Tests\GuzzleTestCase
         $this->assertInstanceOf('\GoWeb\Api\Model', $model);
         $this->assertNotEmpty($model->getParam('total_items'));
     }
+    
+    public function testChangeRequestMethod()
+    {
+        $request = $this->_clientAPI->query('FavouriteChannel')
+            ->alwaysRevalidate()
+            ->get()
+            ->insert();
+        
+        $this->assertEquals('POST', $request->getRequestMethod());
+    }
 }
