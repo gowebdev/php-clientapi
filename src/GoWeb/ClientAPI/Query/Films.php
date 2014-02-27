@@ -63,14 +63,16 @@ class Films extends \GoWeb\ClientAPI\Query
     
     public function onlyHD()
     {
-        $this->setParam('quality', 'HD');
+        $this->setParam('quality.HD', 1);
+        $this->setParam('quality.SD', 0);
         
         return $this;
     }
     
     public function onlySD()
     {
-        $this->setParam('quality', 'SD');
+        $this->setParam('quality.HD', 0);
+        $this->setParam('quality.SD', 1);
         
         return $this;
     }

@@ -32,7 +32,7 @@ class Query
     
     private $_headers = array();
     
-    private $_query = array();
+    protected $_query = array();
     
     private $_requestOptions = array();
 
@@ -132,10 +132,39 @@ class Query
 
     public function setParam($name, $value)
     {
-        $this->_query[$name] = $value;
+        // modify
+        $arraySelector = explode('.', $name);
+        $chunksNum = count($arraySelector);
         
+        // optimize one-level selector search
+        if(1 == $chunksNum) {
+            $this->_query[$name] = $value;
+            return $this;
+        }
+        
+        // selector is nested
+        $section = &$this->_query;
+
+        for($i = 0; $i < $chunksNum - 1; $i++) {
+
+            $field = $arraySelector[$i];
+
+            if(!isset($section[$field])) {
+                $section[$field] = array();
+            }
+            elseif(!is_array($section[$field])) {
+                throw new Exception('Assigning subdocument to scalar value');
+            }
+
+            $section = &$section[$field];
+        }
+        
+        // update local field
+        $section[$arraySelector[$chunksNum - 1]] = $value;
+        
+        // add to query
         if($this->_request) {
-            $this->_request->getQuery()->set($name, $value);
+            $this->_request->getQuery()->set($name, $this->_query[$name]);
         }
         
         return $this;
@@ -213,7 +242,7 @@ class Query
             return $this->_request->getQuery()->toArray();
         }
         else {
-            $this->_query;
+            return $this->_query;
         }
     }
 

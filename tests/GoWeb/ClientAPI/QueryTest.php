@@ -53,4 +53,21 @@ class QueryTest extends \Guzzle\Tests\GuzzleTestCase
         
         $this->assertEquals('POST', $request->getRequestMethod());
     }
+    
+    public function testSetparam()
+    {
+        $query = $this->_clientAPI->query('Films');
+        
+        $query->setParam('query', 'matrix');
+        $query->setParam('quality.HD', 1);
+        $query->setParam('quality.SD', 0);
+
+        $this->assertEquals(array(
+            'query'     => 'matrix',
+            'quality'   => array(
+                'HD'    => 1,
+                'SD'    => 0,
+            ),
+        ), $query->toArray());
+    }
 }
