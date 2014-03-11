@@ -56,8 +56,12 @@ class ClientAPI
      */
     public function setCacheAdapter(CacheAdapterInterface $adapter)
     {
+        $cacheStorage = new CacheStorage($adapter, 'CAPI');
+        
+        $cacheStorage->setClientAPI($this);
+        
         $this->getConnection()->addSubscriber(new CachePlugin(array(
-            'storage'   => new CacheStorage($adapter, 'CAPI'),
+            'storage'   => $cacheStorage,
         )));
         
         return $this;
