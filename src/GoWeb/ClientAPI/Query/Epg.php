@@ -8,11 +8,6 @@ class Epg extends \GoWeb\ClientAPI\Query
     
     protected $_responseModelClassname = '\GoWeb\Api\Model\Media\ChannelPrograms';
     
-    protected $_revalidate = self::REVALIDATE_SKIP;
-    
-    // cache for 10 minutes
-    protected $_cacheExpire = 600;
-    
     public function forChannel($channel)
     {
         $this->setParam('channel_id', $channel);
