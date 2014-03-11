@@ -8,10 +8,6 @@ class Channels extends \GoWeb\ClientAPI\Query
     
     protected $_responseModelClassname = '\GoWeb\Api\Model\Media\ChannelList'; 
     
-    protected $_revalidate = self::REVALIDATE_SKIP;
-    
-    protected $_cacheExpire = 3600;
-    
     public function onlyWithTorrent()
     {
         $this->_query['torrent'] = 1;
