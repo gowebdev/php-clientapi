@@ -19,7 +19,7 @@
         "url": "https://github.com/gowebdev/php-api.git"
     }],
     "require": {
-        "guzzle/guzzle": "3.7.*",
+        "guzzle/guzzle": "3.8.1",
         "goweb/php-api": "dev-master",
         "psr/log": "~1.0"
     }
