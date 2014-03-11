@@ -8,10 +8,6 @@ class Films extends \GoWeb\ClientAPI\Query
 
     protected $_responseModelClassname = '\GoWeb\Api\Model\Media\FilmList';
     
-    protected $_revalidate = self::REVALIDATE_ALWAYS;
-    
-    protected $_cacheExpire = 7200;
-    
     public function byId($id)
     {
         if(is_array($id)) {

@@ -47,7 +47,6 @@ class QueryTest extends \Guzzle\Tests\GuzzleTestCase
     public function testChangeRequestMethod()
     {
         $request = $this->_clientAPI->query('FavouriteChannel')
-            ->alwaysRevalidate()
             ->get()
             ->insert();
         

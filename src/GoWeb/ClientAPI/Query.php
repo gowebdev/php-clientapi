@@ -8,21 +8,6 @@ class Query
     const REQUEST_METHOD_POST   = 'POST';
     const REQUEST_METHOD_PUT    = 'PUT';
     const REQUEST_METHOD_DELETE = 'DELETE';
-
-    /**
-     * Revalidation request is never sent, and the response is always served from the origin server
-     */
-    const REVALIDATE_NEVER  = 'never';
-    
-    /**
-     * Always revalidate
-     */
-    const REVALIDATE_ALWAYS = 'always';
-    
-    /**
-     * Never revalidate and uses the response stored in the cache
-     */
-    const REVALIDATE_SKIP   = 'skip';
     
     protected $_requestMethod = self::REQUEST_METHOD_GET;
 
@@ -48,12 +33,6 @@ class Query
     
     /**
      *
-     * @var string default revalidate rule
-     */
-    protected $_revalidate = self::REVALIDATE_NEVER;
-    
-    /**
-     *
      * @var int default cache expire time
      */
     protected $_cacheExpire = 3600;
@@ -67,11 +46,6 @@ class Query
     public function __construct(\GoWeb\ClientAPI $api)
     {
         $this->_clientAPI = $api;
-        
-        // cache
-        $this
-            ->setRevalidate($this->_revalidate)
-            ->setCacheExpireTime($this->_cacheExpire);
 
         $this->init();
     }
@@ -286,33 +260,6 @@ class Query
     public function getRequestMethod()
     {
         return $this->_requestMethod;
-    }
-    
-    public function alwaysRevalidate() {
-        $this->setRevalidate(self::REVALIDATE_ALWAYS);
-        return $this;
-    }
-    
-    public function skipRevalidate() {
-        $this->setRevalidate(self::REVALIDATE_SKIP);
-        return $this;
-    }
-    
-    public function neverRevalidate() {
-        $this->setRevalidate(self::REVALIDATE_NEVER);
-        return $this;
-    }
-    
-    public function setRevalidate($revalidate)
-    {
-        $this->setOption('cache.revalidate', $revalidate);
-        return $this;
-    }
-    
-    public function setCacheExpireTime($time)
-    {
-        $this->setOption('cache.override_ttl', (int) $time);
-        return $this;
     }
     
     /**
