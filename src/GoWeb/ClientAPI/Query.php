@@ -389,7 +389,11 @@ class Query
     
     public function getValidateErrors() 
     {
-        $jsonResponse = $this->_rawResponse->json();
+        try {
+            $jsonResponse = $this->_rawResponse->json();
+        } catch (\Guzzle\Common\Exception\RuntimeException $e) {
+            return array();
+        }
         
         if(empty($jsonResponse['validate_errors'])) {
             return array();
