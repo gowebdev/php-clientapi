@@ -11,7 +11,6 @@ class UpdateUser extends \GoWeb\ClientAPI\Query
     public function setUser(\GoWeb\Api\Model\Client $client)
     {
         $this
-            ->setParam('identity', $client->getId())
             ->setParam('email', $client->getEmail())
             ->setParam('password', $client->getProfile()->getPassword())
             ->setParam('last_name', $client->getLastName())
