@@ -8,6 +8,8 @@ class ClientAPI  extends \GoWeb\ClientAPI  implements \IApplicationComponent
     
     public $apiServerUrl;
     
+    public $agent;
+    
     /**
      *
      * @var boolean is cache enebled
@@ -20,6 +22,11 @@ class ClientAPI  extends \GoWeb\ClientAPI  implements \IApplicationComponent
         
         // define server url
         $this->setAPIServerUrl( $this->apiServerUrl );
+        
+        // define agent if specified
+        if($this->agent) {
+            $this->setAgent($this->agent);
+        }
         
         // define cacher
         if($this->cache) {

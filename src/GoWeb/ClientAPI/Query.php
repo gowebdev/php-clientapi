@@ -312,7 +312,9 @@ class Query
         if(!$this->_clientAPI->isUserAuthorised()) {
             if(!($this instanceof \GoWeb\ClientAPI\Query\Auth)) {
                 // use lazy auth if this query is no Query\Auth
-                $this->_clientAPI->auth()->send();                
+                $this->_clientAPI
+                    ->auth()
+                    ->send();                
             }
         }
         

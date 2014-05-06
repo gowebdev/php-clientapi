@@ -16,6 +16,8 @@ class ClientAPI
     
     private $_password = '';
     
+    private $_agent = null;
+    
     private $_connection;
 
     private $_language;
@@ -145,9 +147,19 @@ class ClientAPI
         return $this;
     }
     
-    public function setDemoCredentials()
+    public function setAgent($agent)
     {
-        return $this->setCredentials('', '');
+        $this->_agent = $agent;
+        return $this;
+    }
+    
+    public function setDemoCredentials($agent)
+    {
+        $this
+            ->setCredentials('', '')
+            ->setAgent($agent);
+        
+        return $this;
     }
     
     /**
@@ -159,8 +171,10 @@ class ClientAPI
     {
         $authQuery = $this->query('Auth');
         
-        if(null !== $this->_email && null !== $this->_password) {
+        if($this->_email && $this->_password) {
             $authQuery->byEmail($this->_email, $this->_password);
+        } else {
+            $authQuery->demo($this->_agent);
         }
         
         return $authQuery;
