@@ -153,6 +153,11 @@ class ClientAPI
         return $this;
     }
     
+    public function getAgent()
+    {
+        return $this->_agent;
+    }
+
     public function setDemoCredentials($agent)
     {
         $this

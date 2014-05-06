@@ -13,6 +13,15 @@ class Register extends \GoWeb\ClientAPI\Query
     const ERROR_INVALID_PASSWORD                        = 4;
     const ERROR_GENERIC_VALIDATION_ERROR                = 5;
 
+    public function init()
+    {
+        // define client
+        if($this->getClientAPI()->getAgent()) {
+            $this->setAgent($this->getClientAPI()->getAgent());
+        }
+    }
+
+
     public function setEmail( $email )
     {
         $this->setParam( 'email', $email );
