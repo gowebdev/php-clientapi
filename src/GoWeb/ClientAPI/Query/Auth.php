@@ -30,6 +30,18 @@ class Auth extends \GoWeb\ClientAPI\Query
 
         return $this;
     }
+    
+    public function demo($agent = null)
+    {
+        $this->setParam('email', null);
+        $this->setParam('password', null);
+        
+        if($agent) {
+            $this->SetParam('agent', $agent);
+        }
+        
+        return $this;
+    }
 
     public function remember($remember = true)
     {
