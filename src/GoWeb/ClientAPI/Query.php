@@ -277,8 +277,8 @@ class Query
                     $this->_headers,
                     null,
                     array(
-                        'timeout'         => 5,
-                        'connect_timeout' => 2,
+                        'timeout'         => 15,
+                        'connect_timeout' => 5,
                     )
                 );
             
