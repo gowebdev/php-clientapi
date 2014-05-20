@@ -21,6 +21,7 @@
     "require": {
         "guzzle/guzzle": "3.*",
         "goweb/php-api": "0.*",
-        "psr/log": "~1.0"
+        "psr/log": "~1.0",
+        "sokil/php-rest-client": "0.*"
     }
 }
