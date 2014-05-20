@@ -30,12 +30,6 @@ class Query
     private $_rawResponse;
     
     private $_model;
-    
-    /**
-     *
-     * @var int default cache expire time
-     */
-    protected $_cacheExpire = 3600;
 
     /**
      *
