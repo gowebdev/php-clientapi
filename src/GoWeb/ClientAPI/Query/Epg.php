@@ -6,6 +6,8 @@ class Epg extends \GoWeb\ClientAPI\Query
 {
     protected $_url = 'channels/epg';
     
+    protected $_action = self::ACTION_READ;
+    
     protected $_responseModelClassname = '\GoWeb\Api\Model\Media\ChannelPrograms';
     
     public function forChannel($channel)

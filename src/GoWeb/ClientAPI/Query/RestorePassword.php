@@ -6,6 +6,8 @@ class RestorePassword extends \GoWeb\ClientAPI\Query
 {
     protected $_url = 'users/requestpassword';
     
+    protected $_action = self::ACTION_READ;
+    
     const REQUEST_PASSWORD_OK           = 0;
     const REQUEST_PASSWORD_WRONG_EMAIL  = 1;
     

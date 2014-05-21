@@ -199,16 +199,16 @@
         },
         {
             "name": "sokil/php-rest-client",
-            "version": "0.9",
+            "version": "0.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sokil/php-rest-client.git",
-                "reference": "796bc6eb3cb35a3bc2d865b7bac2d79f1701725d"
+                "reference": "5a762fe64dde5d919bd41e72880b9f1ec1c190d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sokil/php-rest-client/zipball/796bc6eb3cb35a3bc2d865b7bac2d79f1701725d",
-                "reference": "796bc6eb3cb35a3bc2d865b7bac2d79f1701725d",
+                "url": "https://api.github.com/repos/sokil/php-rest-client/zipball/5a762fe64dde5d919bd41e72880b9f1ec1c190d1",
+                "reference": "5a762fe64dde5d919bd41e72880b9f1ec1c190d1",
                 "shasum": ""
             },
             "require": {
@@ -233,7 +233,7 @@
                 }
             ],
             "description": "Framework to build RESTful client",
-            "time": "2014-05-20 15:06:27"
+            "time": "2014-05-21 19:40:34"
         },
         {
             "name": "symfony/event-dispatcher",

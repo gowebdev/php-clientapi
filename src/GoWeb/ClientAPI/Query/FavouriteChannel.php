@@ -6,6 +6,7 @@ class FavouriteChannel extends \GoWeb\ClientAPI\Query
 {
     protected $_url = 'channels/favourite';
     
+    protected $_action = self::ACTION_READ;
     
     public function channel($channelId)
     {

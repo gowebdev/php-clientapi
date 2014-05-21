@@ -6,6 +6,8 @@ class Films extends \GoWeb\ClientAPI\Query
 {
     protected $_url = 'vod/feed';
 
+    protected $_action = self::ACTION_READ;
+    
     protected $_responseModelClassname = '\GoWeb\Api\Model\Media\FilmList';
     
     public function byId($id)

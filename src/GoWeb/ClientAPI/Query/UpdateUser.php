@@ -6,7 +6,7 @@ class UpdateUser extends \GoWeb\ClientAPI\Query
 {
     protected $_url = 'user';
     
-    protected $_requestMethod = self::REQUEST_METHOD_PUT;
+    protected $_action = self::ACTION_UPDATE;
     
     public function setUser(\GoWeb\Api\Model\Client $client)
     {

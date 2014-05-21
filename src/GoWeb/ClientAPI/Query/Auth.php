@@ -6,6 +6,8 @@ class Auth extends \GoWeb\ClientAPI\Query
 {
     protected $_url = 'users/authorize';
 
+    protected $_action = self::ACTION_READ;
+    
     protected $_responseModelClassname = 'GoWeb\Api\Model\Client';
 
     const ERROR_NONE                                    = 0;
