@@ -8,9 +8,9 @@ use \Guzzle\Cache\CacheAdapterInterface;
 use \Guzzle\Plugin\Cache\CachePlugin;
 use \GoWeb\ClientAPI\CacheStorage;
 
-class ClientAPI
+class ClientAPI extends \Sokil\Rest\Client\Factory
 {
-    private $_apiServerUrl;
+    protected $_requestClassNamespace = '\GoWeb\ClientAPI\Query';
 
     private $_email = '';
     
@@ -18,83 +18,70 @@ class ClientAPI
     
     private $_agent = null;
     
-    private $_connection;
+    protected $_curlOptions = array(
+        CURLOPT_TIMEOUT_MS          => 15000,
+        CURLOPT_CONNECTTIMEOUT_MS   => 5000,
+    );
 
-    private $_language;
-    
-    private $_logger;
-
-    public function __construct(array $options = null)
+    public function __construct($options = null)
     {
-        // configure api
-        if($options) {
-            
+        if(is_array($options)) {
             // server url
             if(isset($options['apiServerUrl'])) {
                 $this->setAPIServerUrl($options['apiServerUrl']);
             }
-            
             // cache
             if(isset($options['cacheAdapter']) && $options['cacheAdapter'] instanceof CacheAdapterInterface) {
                 $this->setCacheAdapter($options['cacheAdapter']);
             }
+        } else {
+            parent::__construct($options);
         }
     }
 
+    /**
+     * @deprecated
+     * @return string API server URL
+     */
     public function getAPIServerUrl()
     {
-        return $this->_apiServerUrl;
-    }
-
-    public function setAPIServerUrl($newUrl)
-    {
-        $this->_apiServerUrl = $newUrl;
+        return $this->getHost();
     }
 
     /**
-     * @param \Guzzle\Cache\CacheAdapterInterface $adapter
-     * @return \GoWeb\ClientAPI
-     * @link http://guzzle.readthedocs.org/en/latest/plugins/cache-plugin.html
+     * @deprecated
+     * @param type $host
      */
-    public function setCacheAdapter(CacheAdapterInterface $adapter)
+    public function setAPIServerUrl($host)
     {
-        $cacheStorage = new CacheStorage($adapter, 'CAPI');
-        
-        $cacheStorage->setClientAPI($this);
-        
-        $this->getConnection()->addSubscriber(new CachePlugin(array(
-            'storage'   => $cacheStorage,
-        )));
-        
+        $this->setHost($host);
         return $this;
     }
     
     /**
-     *
-     * @param string $lang lang identifier compatible with Accept-Language header
+     * @deprecated
+     * 
+     * @param string $queryName name of query
+     * @return GoWeb\ClientAPI\Query
+     * @throws \GoWeb\ClientAPI\Query\Exception
      */
-    public function setLanguage($lang)
+    public function query($queryName)
     {
-        $this->_language = $lang;
+        return $this->createRequest($queryName);
     }
 
-    public function getLanguage()
-    {
-        return $this->_language;
-    }
-
-    /**
-     * Get Guzzle RESTful client
-     *
-     * @return \Guzzle\Http\Client
-     */
-    public function getConnection()
-    {
-        if(!$this->_connection) {
-            $this->_connection = new Client($this->_apiServerUrl);
-        }
-
-        return $this->_connection;
+    protected function _getCacheKeyGenerator() {
+        return function(\Guzzle\Http\Message\Request $request) {
+            $prefix = 'CAPI';
+            
+            if($this->isUserAuthorised()) {
+                $prefix .= $this->getActiveUser()->getProfile()->getAgent();
+            }
+            
+            $prefix .= $request->getHeader('Accept-Language');
+            
+            return $prefix;
+        };
     }
 
     private $_activeUser;
@@ -118,26 +105,7 @@ class ClientAPI
         $this->_activeUser = $user;
 
         return $this;
-    }
-
-    /**
-     * 
-     * @param string $queryName name of query
-     * @return GoWeb\ClientAPI\Query
-     * @throws \GoWeb\ClientAPI\Query\Exception
-     */
-    public function query($queryName)
-    {
-        // Get query class
-        $className = '\\GoWeb\\ClientAPI\\Query\\' . $queryName;
-        if(!class_exists($className)) {
-            throw new \GoWeb\ClientAPI\Query\Exception('Query class not found');
-        }
-        
-        // Create query
-        return new $className($this);
-    }
-    
+    }    
     
     public function setCredentials($email, $password)
     {
@@ -174,7 +142,7 @@ class ClientAPI
      */
     public function auth()
     {
-        $authQuery = $this->query('Auth');
+        $authQuery = $this->createRequest('Auth');
         
         if($this->_email && $this->_password) {
             $authQuery->byEmail($this->_email, $this->_password);
@@ -188,25 +156,5 @@ class ClientAPI
     public function logout()
     {
         $this->_activeUser = null;
-    }
-    
-     public function setLogger(\Psr\Log\LoggerInterface $logger)
-    {
-        $this->_logger = $logger;
-        return $this;
-    }
-    
-    /**
-     * 
-     * @return \Psr\Log\LoggerInterface
-     */
-    public function getLogger()
-    {
-        return $this->_logger;
-    }
-    
-    public function hasLogger()
-    {
-        return (bool) $this->_logger;
     }
 }
