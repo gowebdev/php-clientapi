@@ -24,7 +24,7 @@ class QueryTest extends \Guzzle\Tests\GuzzleTestCase
         /**
          * Request model
          */
-        $query = $this->_clientAPI->query('Films');
+        $query = $this->_clientAPI->createRequest('Films');
         $model = $query->send();
 
         $this->assertEquals('MISS from GuzzleCache', $query->getRawResponse()->getHeader('X-Cache'));
@@ -34,7 +34,7 @@ class QueryTest extends \Guzzle\Tests\GuzzleTestCase
         /**
          * Request from cache
          */
-        $query = $this->_clientAPI->query('Films');
+        $query = $this->_clientAPI->createRequest('Films');
         $model = $query->send();
 
         $this->assertEquals('HIT from GuzzleCache', $query->getRawResponse()->getHeader('X-Cache'));
@@ -43,7 +43,7 @@ class QueryTest extends \Guzzle\Tests\GuzzleTestCase
     
     public function testSetParam()
     {
-        $query = $this->_clientAPI->query('Films');
+        $query = $this->_clientAPI->createRequest('Films');
         
         $query->setParam('query', 'matrix');
         $query->setParam('quality.HD', 1);

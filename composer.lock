@@ -202,16 +202,16 @@
         },
         {
             "name": "sokil/php-rest",
-            "version": "0.12",
+            "version": "0.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sokil/php-rest.git",
-                "reference": "d30ee5ef74f871f5ef5869897d05cb2e0a14d2b6"
+                "reference": "829ca7cacdeb0a41f959a3181f3a91541575180a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sokil/php-rest/zipball/d30ee5ef74f871f5ef5869897d05cb2e0a14d2b6",
-                "reference": "d30ee5ef74f871f5ef5869897d05cb2e0a14d2b6",
+                "url": "https://api.github.com/repos/sokil/php-rest/zipball/829ca7cacdeb0a41f959a3181f3a91541575180a",
+                "reference": "829ca7cacdeb0a41f959a3181f3a91541575180a",
                 "shasum": ""
             },
             "require": {
@@ -236,7 +236,7 @@
                 }
             ],
             "description": "Framework to build RESTful service",
-            "time": "2014-05-22 11:54:35"
+            "time": "2014-05-22 14:53:54"
         },
         {
             "name": "symfony/event-dispatcher",

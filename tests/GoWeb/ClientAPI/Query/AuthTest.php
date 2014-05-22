@@ -13,7 +13,7 @@ class AuthTest extends \Guzzle\Tests\GuzzleTestCase
         
         $this->assertEmpty($clientApi->getActiveUser());
         
-        $films = $clientApi->query('Films')->send();
+        $films = $clientApi->createRequest('Films')->send();
         
         $this->assertInstanceOf('\GoWeb\Api\Model\Client', $clientApi->getActiveUser());
         $this->assertEquals(0, $clientApi->getActiveUser()->getId());
@@ -35,6 +35,6 @@ class AuthTest extends \Guzzle\Tests\GuzzleTestCase
         // set wrong credentials
         $clientApi->setCredentials('foo@bar.com', 'foobar');
         
-        $films = $clientApi->query('Films')->send();
+        $films = $clientApi->createRequest('Films')->send();
     }
 }
