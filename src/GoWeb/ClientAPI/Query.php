@@ -11,6 +11,8 @@ class Query extends \Sokil\Rest\Client\Request
      */
     public function getClientAPI()
     {
+        trigger_error('Query::getClientAPI() is deprecated. Use Query::getFactory()', E_USER_DEPRECATED);
+        
         return $this->_factory;
     }
 

@@ -109,7 +109,7 @@ class Auth extends \GoWeb\ClientAPI\Query
         /**
          * Set active user
          */
-        $this->getClientAPI()->setActiveUser($response->getStructure());
+        $this->getFactory()->setActiveUser($response->getStructure());
 
         return $response;
     }

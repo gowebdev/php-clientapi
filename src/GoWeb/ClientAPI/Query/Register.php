@@ -18,8 +18,8 @@ class Register extends \GoWeb\ClientAPI\Query
     public function init()
     {
         // define client
-        if($this->getClientAPI()->getAgent()) {
-            $this->setAgent($this->getClientAPI()->getAgent());
+        if($this->getFactory()->getAgent()) {
+            $this->setAgent($this->getFactory()->getAgent());
         }
     }
 
