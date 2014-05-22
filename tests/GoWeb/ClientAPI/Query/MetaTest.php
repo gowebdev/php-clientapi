@@ -10,10 +10,10 @@ class MetaTest extends \Guzzle\Tests\GuzzleTestCase
             "error" => 0,
             "name" => "GoWeb",
             "description" => array(
-                "uk" => "P2P television",
-                "en" => "P2P television",
-                "ru" => "P2P television",
-                "be" => "P2P television",
+                "uk" => "P2P television UK",
+                "en" => "P2P television EN",
+                "be" => "P2P television BE",
+                "ru" => "P2P television RU",
             ),
             "icon" => "http:\/\/tvapi.goweb.com\/img\/logo\/goweb.png",
             "time" => 1400760359
@@ -26,8 +26,12 @@ class MetaTest extends \Guzzle\Tests\GuzzleTestCase
             ), json_encode($response)),
         )));
         
-        $meta = $clientApi->query('Meta')->send();
+        /* @var $meta \GoWeb\ClientAPI\Response\Meta */
+        $meta = $clientApi->createRequest('Meta')->send();
         
-        $this->assertEquals($response, $meta->toArray());
+        $this->assertEquals($response['name'], $meta->getName());
+        $this->assertEquals($response['description'], $meta->getDescription());
+        $this->assertEquals($response['description']['uk'], $meta->getDescription('uk'));
+        $this->assertEquals($response['icon'], $meta->getIcon());
     }
 }

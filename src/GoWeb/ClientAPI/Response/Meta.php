@@ -17,9 +17,9 @@ class Meta extends \Sokil\Rest\Transport\Structure
     public function getDescription($lang = null)
     {
         if($lang) {
-            return $this->get('description');
-        } else {
             return $this->get('description.' . $lang);
+        } else {
+            return $this->get('description');
         }
     }
 }
