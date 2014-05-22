@@ -3,15 +3,18 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "9c52e14cfa8c747833e3217722913b43",
+    "hash": "19f661ded2373e47f4995fe5d0bd48e7",
     "packages": [
         {
             "name": "goweb/php-api",
-            "version": "0.7",
+            "version": "0.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gowebdev/php-api.git",
-                "reference": "e02c601bda9391d8e9aa81622695fce44a7ced48"
+                "reference": "1c45878b028d3e9bddc5fcb6b1c285a16cf43d74"
+            },
+            "require": {
+                "sokil/php-rest": "0.*"
             },
             "type": "library",
             "autoload": {
@@ -29,7 +32,7 @@
                 }
             ],
             "description": "PHP lib for communication between different services",
-            "time": "2014-05-19 13:25:54"
+            "time": "2014-05-22 11:29:07"
         },
         {
             "name": "guzzle/guzzle",
@@ -198,17 +201,17 @@
             "time": "2014-05-17 22:50:15"
         },
         {
-            "name": "sokil/php-rest-client",
-            "version": "0.10",
+            "name": "sokil/php-rest",
+            "version": "0.12",
             "source": {
                 "type": "git",
-                "url": "https://github.com/sokil/php-rest-client.git",
-                "reference": "5a762fe64dde5d919bd41e72880b9f1ec1c190d1"
+                "url": "https://github.com/sokil/php-rest.git",
+                "reference": "d30ee5ef74f871f5ef5869897d05cb2e0a14d2b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sokil/php-rest-client/zipball/5a762fe64dde5d919bd41e72880b9f1ec1c190d1",
-                "reference": "5a762fe64dde5d919bd41e72880b9f1ec1c190d1",
+                "url": "https://api.github.com/repos/sokil/php-rest/zipball/d30ee5ef74f871f5ef5869897d05cb2e0a14d2b6",
+                "reference": "d30ee5ef74f871f5ef5869897d05cb2e0a14d2b6",
                 "shasum": ""
             },
             "require": {
@@ -232,8 +235,8 @@
                     "email": "dmytro.sokil@gmail.com"
                 }
             ],
-            "description": "Framework to build RESTful client",
-            "time": "2014-05-21 19:40:34"
+            "description": "Framework to build RESTful service",
+            "time": "2014-05-22 11:54:35"
         },
         {
             "name": "symfony/event-dispatcher",

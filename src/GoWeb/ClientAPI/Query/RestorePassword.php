@@ -4,7 +4,7 @@ namespace GoWeb\ClientAPI\Query;
 
 class RestorePassword extends \GoWeb\ClientAPI\Query
 {
-    protected $_url = 'users/requestpassword';
+    protected $_url = '/users/requestpassword';
     
     protected $_action = self::ACTION_READ;
     

@@ -4,11 +4,11 @@ namespace GoWeb\ClientAPI\Query;
 
 class Auth extends \GoWeb\ClientAPI\Query
 {
-    protected $_url = 'users/authorize';
+    protected $_url = '/users/authorize';
 
     protected $_action = self::ACTION_READ;
     
-    protected $_responseModelClassname = 'GoWeb\Api\Model\Client';
+    protected $_structureClassName = 'GoWeb\Api\Model\Client';
 
     const ERROR_NONE                                    = 0;
     const ERROR_GENERIC_SERVER_ERROR                    = 1;
@@ -20,26 +20,26 @@ class Auth extends \GoWeb\ClientAPI\Query
     
     public function setIp($ip)
     {
-        $this->setParam('ip', $ip);
+        $this->setQueryParam('ip', $ip);
 
         return $this;
     }
 
     public function byEmail($email, $password)
     {
-        $this->setParam('email', $email);
-        $this->setParam('password', $password);
+        $this->setQueryParam('email', $email);
+        $this->setQueryParam('password', $password);
 
         return $this;
     }
     
     public function demo($agent = null)
     {
-        $this->setParam('email', null);
-        $this->setParam('password', null);
+        $this->setQueryParam('email', null);
+        $this->setQueryParam('password', null);
         
         if($agent) {
-            $this->SetParam('agent', $agent);
+            $this->setQueryParam('agent', $agent);
         }
         
         return $this;
@@ -47,20 +47,20 @@ class Auth extends \GoWeb\ClientAPI\Query
 
     public function remember($remember = true)
     {
-        $this->setParam('remember', (int) $remember );
+        $this->setQueryParam('remember', (int) $remember );
 
         return $this;
     }
     
     public function setAPIKey($apiKey)
     {
-        $this->setParam('api_key', $apiKey);
+        $this->setQueryParam('api_key', $apiKey);
         return $this;
     }
 
     public function byPermanentId($permId)
     {
-        $this->setParam('permid', $permId);
+        $this->setQueryParam('permid', $permId);
 
         return $this;
     }
@@ -71,10 +71,9 @@ class Auth extends \GoWeb\ClientAPI\Query
          * Send auth request
          */
         try {
-            $activeUser = parent::send();
+            $response = parent::send();
         }
         catch(\GoWeb\ClientAPI\Query\Exception\Common $e) {
-            
             $rawResponse = $this->getRawResponse();
             
             if($rawResponse) {
@@ -96,7 +95,7 @@ class Auth extends \GoWeb\ClientAPI\Query
                 self::ERROR_CLIENT_VERSION_NOT_SUPPORTED            => 'ClientVersionNotSupported',
                 self::ERROR_NO_ACTIVE_SERVICES_FOUND                => 'NoActiveServicesFound',
             );
-
+            
             // throw generic exception
             if(!isset($statusExceptionMap[$response['status']])) {
                 throw new Auth\Exception('Unknown server error with status code : ' . json_encode($response)  );
@@ -110,9 +109,9 @@ class Auth extends \GoWeb\ClientAPI\Query
         /**
          * Set active user
          */
-        $this->getClientAPI()->setActiveUser($activeUser);
+        $this->getClientAPI()->setActiveUser($response->getStructure());
 
-        return $activeUser;
+        return $response;
     }
 
 }

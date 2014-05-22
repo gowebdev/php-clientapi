@@ -4,7 +4,7 @@ namespace GoWeb\ClientAPI\Query;
 
 class Register extends \GoWeb\ClientAPI\Query
 {
-    protected $_url = 'users/register';
+    protected $_url = '/users/register';
 
     protected $_action = self::ACTION_READ;
     

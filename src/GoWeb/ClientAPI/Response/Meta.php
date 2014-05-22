@@ -1,6 +1,8 @@
 <?php
 
-class Meta extends \Sokil\Rest\Client\Structure
+namespace GoWeb\ClientAPI\Response;
+
+class Meta extends \Sokil\Rest\Transport\Structure
 {
     public function getIcon()
     {

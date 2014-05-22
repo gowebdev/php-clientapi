@@ -29,8 +29,7 @@ class QueryTest extends \Guzzle\Tests\GuzzleTestCase
 
         $this->assertEquals('MISS from GuzzleCache', $query->getRawResponse()->getHeader('X-Cache'));
         
-        $this->assertInstanceOf('\GoWeb\Api\Model', $model);
-        $this->assertNotEmpty($model->getParam('total_items'));
+        $this->assertNotEmpty($model->get('total_items'));
 
         /**
          * Request from cache
@@ -39,21 +38,10 @@ class QueryTest extends \Guzzle\Tests\GuzzleTestCase
         $model = $query->send();
 
         $this->assertEquals('HIT from GuzzleCache', $query->getRawResponse()->getHeader('X-Cache'));
-        
-        $this->assertInstanceOf('\GoWeb\Api\Model', $model);
-        $this->assertNotEmpty($model->getParam('total_items'));
+        $this->assertNotEmpty($model->get('total_items'));
     }
     
-    public function testChangeRequestMethod()
-    {
-        $request = $this->_clientAPI->query('FavouriteChannel')
-            ->get()
-            ->insert();
-        
-        $this->assertEquals('POST', $request->getRequestMethod());
-    }
-    
-    public function testSetparam()
+    public function testSetParam()
     {
         $query = $this->_clientAPI->query('Films');
         

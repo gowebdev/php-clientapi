@@ -4,11 +4,11 @@ namespace GoWeb\ClientAPI\Query;
 
 class Channels extends \GoWeb\ClientAPI\Query
 {
-    protected $_url = 'channels/list';
+    protected $_url = '/channels/list';
     
     protected $_action = self::ACTION_READ;
     
-    protected $_responseModelClassname = '\GoWeb\Api\Model\Media\ChannelList'; 
+    protected $_structureClassName = '\GoWeb\Api\Model\Media\ChannelList'; 
     
     public function onlyWithTorrent()
     {

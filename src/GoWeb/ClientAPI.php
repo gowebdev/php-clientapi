@@ -126,11 +126,14 @@ class ClientAPI extends \Sokil\Rest\Client\Factory
         return $this->_agent;
     }
 
-    public function setDemoCredentials($agent)
+    public function setDemoCredentials($agent = null)
     {
         $this
-            ->setCredentials('', '')
-            ->setAgent($agent);
+            ->setCredentials('', '');
+        
+        if($agent) {
+            $this->setAgent($agent);
+        }
         
         return $this;
     }

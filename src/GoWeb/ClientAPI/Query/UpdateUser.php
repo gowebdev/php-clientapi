@@ -4,7 +4,7 @@ namespace GoWeb\ClientAPI\Query;
 
 class UpdateUser extends \GoWeb\ClientAPI\Query
 {
-    protected $_url = 'user';
+    protected $_url = '/user';
     
     protected $_action = self::ACTION_UPDATE;
     

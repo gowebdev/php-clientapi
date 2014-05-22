@@ -212,17 +212,27 @@ class Query extends \Sokil\Rest\Client\Request
             $response = parent::send();
             
             if(1 == $response->error) {
-                throw new \GoWeb\ClientAPI\Query\Exception\Common($response->errorMessage);
+                throw new \Exception($response->errorMessage);
             }
         }
         catch(\Guzzle\Http\Exception\BadResponseException $e) {
-            switch($e->getResponse()->getStatusCode())
-            {
-                case 403:
-                    throw new \GoWeb\ClientAPI\Query\Exception\Forbidden('Forbidden to proceed query');
+            if(!($this instanceof \GoWeb\ClientAPI\Query\Auth)) {
+                switch($e->getResponse()->getStatusCode()) {
+                    case 401:
+                        throw new \GoWeb\ClientAPI\Query\Exception\TokenNotSpecified('Token not specified in headers');
 
-                default:
-                    throw new \GoWeb\ClientAPI\Query\Exception\Common('Service return responce code ' . $e->getResponse()->getStatusCode());
+                    case 403:
+                        throw new \GoWeb\ClientAPI\Query\Exception\WrongTokenSpecified('Token not found or expired');
+
+                    case 406:
+                        throw new \GoWeb\ClientAPI\Query\Exception\OtherDeviceAuthrorized('Token was previously deleted because other device join to same service');
+
+                    default:
+                        throw new \GoWeb\ClientAPI\Query\Exception\Common('Service return responce code ' . $e->getResponse()->getStatusCode());
+                }
+            } else {
+                // auth return 403
+                throw new \GoWeb\ClientAPI\Query\Exception\Common($e->getMessage());
             }
         }
         catch(\Exception $e) {
