@@ -7,11 +7,11 @@
     "packages": [
         {
             "name": "goweb/php-api",
-            "version": "0.13",
+            "version": "0.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gowebdev/php-api.git",
-                "reference": "1c45878b028d3e9bddc5fcb6b1c285a16cf43d74"
+                "reference": "e8d9a8ed68b8a602ee8d6bea838fd4d3d0a5a38f"
             },
             "require": {
                 "sokil/php-rest": "0.*"
@@ -32,7 +32,7 @@
                 }
             ],
             "description": "PHP lib for communication between different services",
-            "time": "2014-05-22 11:29:07"
+            "time": "2014-05-23 07:16:44"
         },
         {
             "name": "guzzle/guzzle",
@@ -240,7 +240,7 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.4.4",
+            "version": "v2.4.5",
             "target-dir": "Symfony/Component/EventDispatcher",
             "source": {
                 "type": "git",
