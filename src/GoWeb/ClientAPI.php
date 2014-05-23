@@ -71,7 +71,7 @@ class ClientAPI extends \Sokil\Rest\Client\Factory
     }
 
     protected function _getCacheKeyGenerator() {
-        return function(\Guzzle\Http\Message\Request $request) {
+        return function(\Guzzle\Http\Message\Request $request) use($this) {
             $prefix = 'CAPI';
             
             if($this->isUserAuthorised()) {
