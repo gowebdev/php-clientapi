@@ -66,9 +66,7 @@ class ClientAPI extends \Sokil\Rest\Client\Factory
      * @throws \GoWeb\ClientAPI\Query\Exception
      */
     public function query($queryName)
-    {
-        trigger_error('ClientAPI::query() is deprecated. Use ClientAPI::createRequest()', E_USER_DEPRECATED);
-        
+    {        
         return $this->createRequest($queryName);
     }
 
