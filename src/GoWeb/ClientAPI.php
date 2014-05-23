@@ -75,8 +75,8 @@ class ClientAPI extends \Sokil\Rest\Client\Factory
         return function(\Guzzle\Http\Message\Request $request) use($that) {
             $prefix = 'CAPI';
             
-            if($this->isUserAuthorised()) {
-                $prefix .= $this->getActiveUser()->getProfile()->getAgent();
+            if($that->isUserAuthorised()) {
+                $prefix .= $that->getActiveUser()->getProfile()->getAgent();
             }
             
             $prefix .= $request->getHeader('Accept-Language');
