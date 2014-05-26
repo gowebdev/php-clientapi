@@ -10,6 +10,8 @@ class ClientAPI  extends \GoWeb\ClientAPI  implements \IApplicationComponent
     
     public $agent;
     
+    public $logger;
+    
     /**
      *
      * @var boolean is cache enebled
@@ -31,6 +33,11 @@ class ClientAPI  extends \GoWeb\ClientAPI  implements \IApplicationComponent
         // define cacher
         if($this->cache) {
             $this->setCacheAdapter(new ClientAPICache);
+        }
+        
+        // define logger
+        if($this->logger) {
+            $this->setLogger(\Yii::app()->{$this->logger});
         }
     }  
     
