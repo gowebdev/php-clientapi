@@ -26,28 +26,28 @@ class Validator
     
     public function isValid()
     {
-        if(null !== $this->_errors) {
-            return (bool) $this->_errors;
+        if(null === $this->_errors) {
+            $this->_errors = array();
+
+            // check meta
+            $this->_checkMeta();
+
+            // check services
+            $this->_checkServices();
+
+            // check auth
+            $this->_checkAuth();
+
+            // check channels
+            $this->_checkChannelsList();
+            $this->_checkChannelsEpg();
+
+            // check films
+            $this->_checkVodFeed();
+            $this->_checkVodCategories();
         }
         
-        $this->_errors = array();
-        
-        // check meta
-        $this->_checkMeta();
-        
-        // check services
-        $this->_checkServices();
-        
-        // check auth
-        $this->_checkAuth();
-        
-        // check channels
-        $this->_checkChannelsList();
-        $this->_checkChannelsEpg();
-        
-        // check films
-        $this->_checkVodFeed();
-        $this->_checkVodCategories();
+        return !$this->_errors;
     }
     
     public function getReport()
