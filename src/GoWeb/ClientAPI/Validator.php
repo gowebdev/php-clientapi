@@ -26,28 +26,39 @@ class Validator
     
     public function isValid()
     {
-        if(null === $this->_errors) {
-            $this->_errors = array();
+        try {
+            if(null === $this->_errors) {
+                $this->_errors = array();
 
-            // check meta
-            $this->_checkMeta();
+                // check meta
+                $this->_checkMeta();
 
-            // check services
-            $this->_checkServices();
+                // check services
+                $this->_checkServices();
 
-            // check auth
-            $this->_checkAuth();
+                // check auth
+                $this->_checkAuth();
 
-            // check channels
-            $this->_checkChannelsList();
-            $this->_checkChannelsEpg();
+                // check channels
+                $this->_checkChannelsList();
+                $this->_checkChannelsEpg();
 
-            // check films
-            $this->_checkVodFeed();
-            $this->_checkVodCategories();
+                // check films
+                $this->_checkVodFeed();
+                $this->_checkVodCategories();
+            }
+
+            return !$this->_errors;
+        } catch(\Guzzle\Http\Exception\CurlException $e) {
+            switch($e->getErrorNo()) {
+                case CURLE_COULDNT_RESOLVE_HOST:
+                    throw new \GoWeb\ClientAPI\Validator\Exception\UnknownHost('Host not found');
+                default:
+                    throw $e;
+            }
+        } catch (\Exception $e) {
+            return false;
         }
-        
-        return !$this->_errors;
     }
     
     public function getReport()
