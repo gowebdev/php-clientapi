@@ -161,4 +161,13 @@ class ClientAPI extends \Sokil\Rest\Client\Factory
     {
         $this->_activeUser = null;
     }
+    
+    /**
+     * 
+     * @return \GoWeb\ClientAPI\Validator
+     */
+    public function getValidator()
+    {
+        return new ClientAPI\Validator($this);
+    }
 }
