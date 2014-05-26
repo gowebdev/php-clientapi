@@ -22,6 +22,8 @@ class ClientAPI extends \Sokil\Rest\Client\Factory
         CURLOPT_TIMEOUT_MS          => 15000,
         CURLOPT_CONNECTTIMEOUT_MS   => 5000,
     );
+    
+    private $_meta;
 
     public function __construct($options = null)
     {
@@ -169,5 +171,18 @@ class ClientAPI extends \Sokil\Rest\Client\Factory
     public function getValidator()
     {
         return new ClientAPI\Validator($this);
+    }
+    
+    public function getMeta()
+    {
+        if(!$this->_meta) {
+            $this->_meta = $this
+                ->createRequest('Meta')
+                ->send()
+                ->getStructure()
+                ->toArray();
+        }
+        
+        return $this->_meta;
     }
 }
