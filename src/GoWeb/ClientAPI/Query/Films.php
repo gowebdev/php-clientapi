@@ -90,12 +90,8 @@ class Films extends \GoWeb\ClientAPI\Query
     }
     
     public function sort($field, $descendent = true)
-    {
-        if(empty($this->_query['sort'])) {
-            $this->_query['sort'] = array();
-        }
-        
-        $this->_query['sort'][$field] = $descendent ? -1 : 1;
+    {        
+        $this->setQueryParam('sort.' . $field, $descendent ? -1 : 1);
         
         return $this;
     }
