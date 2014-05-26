@@ -179,6 +179,11 @@ class ClientAPI extends \Sokil\Rest\Client\Factory
             $this->_meta = $this
                 ->createRequest('Meta')
                 ->send();
+            
+            if($this->_meta->get('error')) {
+                $message = $this->_meta->get('errorMessage');
+                throw new \Exception($message ? $message : 'Error fetching meta');
+            }
         }
         
         return $this->_meta;
