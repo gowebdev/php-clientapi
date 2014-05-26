@@ -63,27 +63,24 @@ class Validator
     
     private function _checkMeta() 
     {
-        $request = $this->_clientAPI->createRequest('Meta');
+        $response = $this->_clientAPI->getMeta();
         
-        /* @var $response \GoWeb\ClientAPI\Response\Meta */
-        $response = $request->send();
-        
-        $url = $request->getUrl();
+        $url = '/';
         
         if(!$response->getName()) {
-            $this->_recordError($url, 'name', self::ERROR_TYPE_FIELD_EMPTY);
+            $this->recordError($url, 'name', self::ERROR_TYPE_FIELD_EMPTY);
         }
         
         if(!$response->getIcon()) {
-            $this->_recordError($url, 'icon', self::ERROR_TYPE_FIELD_EMPTY);
+            $this->recordError($url, 'icon', self::ERROR_TYPE_FIELD_EMPTY);
         }
         
         if(!$response->getDescription()) {
-            $this->_recordError($url, 'description', self::ERROR_TYPE_FIELD_EMPTY);
+            $this->recordError($url, 'description', self::ERROR_TYPE_FIELD_EMPTY);
         }
         
         else if(!is_array($response->getDescription())) {
-            $this->_recordError($url, 'description', self::ERROR_TYPE_FIELD_MUSTBEARRAY);
+            $this->recordError($url, 'description', self::ERROR_TYPE_FIELD_MUSTBEARRAY);
         }
     }
      

@@ -178,9 +178,7 @@ class ClientAPI extends \Sokil\Rest\Client\Factory
         if(!$this->_meta) {
             $this->_meta = $this
                 ->createRequest('Meta')
-                ->send()
-                ->getStructure()
-                ->toArray();
+                ->send();
         }
         
         return $this->_meta;
