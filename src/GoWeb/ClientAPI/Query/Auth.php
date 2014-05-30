@@ -98,7 +98,7 @@ class Auth extends \GoWeb\ClientAPI\Query
             
             // throw generic exception
             if(!isset($statusExceptionMap[$response['status']])) {
-                throw new Auth\Exception('Unknown server error with status code : ' . json_encode($response)  );
+                throw new Auth\Exception('Unknown server error with status code ' . $response['status'] . ' : ' . json_encode($response)  );
             }
 
             // throw defined exception
