@@ -21,7 +21,7 @@ class RestorePassword extends \GoWeb\ClientAPI\Query
     {
         $response = parent::send();
         
-        if($response->getParam('status') === self::REQUEST_PASSWORD_WRONG_EMAIL) {
+        if($response->get('status') === self::REQUEST_PASSWORD_WRONG_EMAIL) {
             throw new \Exception('Email not found');
         }
     }
