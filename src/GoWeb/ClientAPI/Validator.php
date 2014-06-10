@@ -56,8 +56,6 @@ class Validator
                 default:
                     throw $e;
             }
-        } catch (\Exception $e) {
-            return false;
         }
     }
     
