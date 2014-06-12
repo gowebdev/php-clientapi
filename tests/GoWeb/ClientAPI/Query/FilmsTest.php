@@ -1,6 +1,6 @@
 <?php
 
-namespace GoWeb\ClientAPI\Query;
+namespace GoWeb\ClientAPI\Request;
 
 class FilmsTest extends \Guzzle\Tests\GuzzleTestCase
 {
