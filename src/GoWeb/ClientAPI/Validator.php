@@ -95,7 +95,21 @@ class Validator
      
     private function _checkServices()
     {
-        
+        $response = $this->_clientAPI->getServices();
+
+        $url = '/';
+
+        if (!$response->getPackets()) {
+            $this->recordError($url, 'packets', self::ERROR_TYPE_FIELD_EMPTY);
+        } elseif (!is_array($response->getPackets())) {
+            $this->recordError($url, 'packets', self::ERROR_TYPE_FIELD_MUSTBEARRAY);
+        }
+
+        if (!$response->getChannels()) {
+            $this->recordError($url, 'channels', self::ERROR_TYPE_FIELD_EMPTY);
+        } elseif (!is_array($response->getChannels())) {
+            $this->recordError($url, 'channels', self::ERROR_TYPE_FIELD_MUSTBEARRAY);
+        }
     }
     
     private function _checkAuth()

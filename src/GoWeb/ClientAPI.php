@@ -25,6 +25,8 @@ class ClientAPI extends \Sokil\Rest\Client\Factory
     
     private $_meta;
 
+    private $_services;
+
     public function __construct($options = null)
     {
         if(is_array($options)) {
@@ -187,5 +189,21 @@ class ClientAPI extends \Sokil\Rest\Client\Factory
         }
         
         return $this->_meta;
+    }
+
+    public function getServices()
+    {
+        if (!$this->_services) {
+            $this->_services = $this
+                ->createRequest('Services')
+                ->send();
+
+            if ($this->_services->get('error')) {
+                $message = $this->_services->get('errorMessage');
+                throw new \Exception($message ? $message : 'Error fetching meta');
+            }
+        }
+
+       return $this->_services;
     }
 }
