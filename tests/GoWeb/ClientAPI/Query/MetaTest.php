@@ -19,8 +19,13 @@ class MetaTest extends \Guzzle\Tests\GuzzleTestCase
             "time" => 1400760359
         );
         
-        $clientApi = new \GoWeb\ClientAPI('http://example.com/1.0');
+        $clientApi = new \GoWeb\ClientAPI('http://apiserver.com/1.0');
         $clientApi->addSubscriber(new \Guzzle\Plugin\Mock\MockPlugin(array(
+            // auth
+            new \Guzzle\Http\Message\Response(200, array(
+                'Content-type' => 'application/json',
+            ), json_encode(array('error' => 0))),
+            // meta
             new \Guzzle\Http\Message\Response(200, array(
                 'Content-type' => 'application/json',
             ), json_encode($response)),
