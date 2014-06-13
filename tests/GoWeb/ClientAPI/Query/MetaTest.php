@@ -1,6 +1,6 @@
 <?php
 
-namespace GoWeb\ClientAPI\Query;
+namespace GoWeb\ClientAPI\Request;
 
 class MetaTest extends \Guzzle\Tests\GuzzleTestCase
 {
@@ -15,11 +15,11 @@ class MetaTest extends \Guzzle\Tests\GuzzleTestCase
                 "be" => "P2P television BE",
                 "ru" => "P2P television RU",
             ),
-            "icon" => "http:\/\/tvapi.goweb.com\/img\/logo\/goweb.png",
+            "icon" => "http:\/\/server.com\/img\/logo\/goweb.png",
             "time" => 1400760359
         );
         
-        $clientApi = new \GoWeb\ClientAPI('http://api.mw/1.0');
+        $clientApi = new \GoWeb\ClientAPI('http://example.com/1.0');
         $clientApi->addSubscriber(new \Guzzle\Plugin\Mock\MockPlugin(array(
             new \Guzzle\Http\Message\Response(200, array(
                 'Content-type' => 'application/json',
@@ -27,7 +27,8 @@ class MetaTest extends \Guzzle\Tests\GuzzleTestCase
         )));
         
         /* @var $meta \GoWeb\ClientAPI\Response\Meta */
-        $meta = $clientApi->createRequest('Meta')->send();
+        $request = $clientApi->createRequest('Meta');
+        $meta = $request->send();
         
         $this->assertEquals($response['name'], $meta->getName());
         $this->assertEquals($response['description'], $meta->getDescription());

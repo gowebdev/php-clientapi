@@ -3,15 +3,15 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "19f661ded2373e47f4995fe5d0bd48e7",
+    "hash": "4f323546ec7481762a8ed111107e29dd",
     "packages": [
         {
             "name": "goweb/php-api",
-            "version": "0.14",
+            "version": "0.28.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gowebdev/php-api.git",
-                "reference": "e8d9a8ed68b8a602ee8d6bea838fd4d3d0a5a38f"
+                "reference": "3f24bacbc3f573b7b0d921575700c8d6bcb53168"
             },
             "require": {
                 "sokil/php-rest": "0.*"
@@ -32,7 +32,7 @@
                 }
             ],
             "description": "PHP lib for communication between different services",
-            "time": "2014-05-23 07:16:44"
+            "time": "2014-06-07 13:59:31"
         },
         {
             "name": "guzzle/guzzle",
@@ -202,20 +202,21 @@
         },
         {
             "name": "sokil/php-rest",
-            "version": "0.13",
+            "version": "0.22.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sokil/php-rest.git",
-                "reference": "829ca7cacdeb0a41f959a3181f3a91541575180a"
+                "reference": "0e71a91cb78caf77cc88483ba8447f9a6ff2508c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sokil/php-rest/zipball/829ca7cacdeb0a41f959a3181f3a91541575180a",
-                "reference": "829ca7cacdeb0a41f959a3181f3a91541575180a",
+                "url": "https://api.github.com/repos/sokil/php-rest/zipball/0e71a91cb78caf77cc88483ba8447f9a6ff2508c",
+                "reference": "0e71a91cb78caf77cc88483ba8447f9a6ff2508c",
                 "shasum": ""
             },
             "require": {
                 "guzzle/guzzle": "v3.9.1",
+                "php": ">=5.3",
                 "psr/log": "~1.0",
                 "sokil/php-guzzlecomponents": "0.*"
             },
@@ -236,28 +237,31 @@
                 }
             ],
             "description": "Framework to build RESTful service",
-            "time": "2014-05-22 14:53:54"
+            "time": "2014-06-12 17:09:02"
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.4.5",
+            "version": "v2.5.0",
             "target-dir": "Symfony/Component/EventDispatcher",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher.git",
-                "reference": "e539602e5455aa086c0e81e604745af7789e4d8a"
+                "reference": "cb62ec8dd05893fc8e4f0e6e21e326e1fc731fe8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/e539602e5455aa086c0e81e604745af7789e4d8a",
-                "reference": "e539602e5455aa086c0e81e604745af7789e4d8a",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/cb62ec8dd05893fc8e4f0e6e21e326e1fc731fe8",
+                "reference": "cb62ec8dd05893fc8e4f0e6e21e326e1fc731fe8",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
             "require-dev": {
-                "symfony/dependency-injection": "~2.0"
+                "psr/log": "~1.0",
+                "symfony/config": "~2.0",
+                "symfony/dependency-injection": "~2.0",
+                "symfony/stopwatch": "~2.2"
             },
             "suggest": {
                 "symfony/dependency-injection": "",
@@ -266,7 +270,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4-dev"
+                    "dev-master": "2.5-dev"
                 }
             },
             "autoload": {
@@ -292,7 +296,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "http://symfony.com",
-            "time": "2014-04-16 10:34:31"
+            "time": "2014-04-29 10:13:57"
         }
     ],
     "packages-dev": [

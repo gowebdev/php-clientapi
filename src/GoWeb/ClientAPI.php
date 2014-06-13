@@ -10,7 +10,7 @@ use \GoWeb\ClientAPI\CacheStorage;
 
 class ClientAPI extends \Sokil\Rest\Client\Factory
 {
-    protected $_requestClassNamespace = '\GoWeb\ClientAPI\Query';
+    protected $_requestClassNamespace = '\GoWeb\ClientAPI\Request';
 
     private $_email = '';
     
@@ -36,9 +36,68 @@ class ClientAPI extends \Sokil\Rest\Client\Factory
             if(isset($options['cacheAdapter']) && $options['cacheAdapter'] instanceof CacheAdapterInterface) {
                 $this->setCacheAdapter($options['cacheAdapter']);
             }
+            parent::__construct();
         } else {
             parent::__construct($options);
         }
+    }
+    
+    protected function behaviors()
+    {
+        return array(
+            'deprecatedRequest' => new \GoWeb\ClientAPI\RequestBehavior,
+        );
+    }
+
+    public function init()
+    {
+        // auth
+        $this->onBeforeSend(function($event) {
+            
+            $request = $event['request'];
+            
+            // try to auth if not yet authorised
+            if(!$this->isUserAuthorised()) {
+                if(!($request instanceof \GoWeb\ClientAPI\Request\Auth)) {
+                    // use lazy auth if this query is no Query\Auth
+                    $this->auth()->send();                
+                }
+            }
+
+            // auth
+            if($this->isUserAuthorised()) {
+                $request->setHeader('X-Auth-Token', $this->getActiveUser()->getToken());
+            }
+        });
+        
+        // on send
+        $this->onParseResponse(function($event) {
+            if(1 == $event['response']->error) {
+                throw new \GoWeb\ClientAPI\Request\Exception\Common($event['response']->errorMessage);
+            }
+        });
+        
+        // on error
+        $this->onError(function($event) {            
+            if($event['request'] instanceof \GoWeb\ClientAPI\Request\Auth) {
+                // auth return 403
+                throw new \GoWeb\ClientAPI\Request\Exception\Common($e->getMessage());
+            }
+            
+            switch($event['response']->getStatusCode()) {
+                case 401:
+                    throw new \GoWeb\ClientAPI\Request\Exception\TokenNotSpecified('Token not specified in headers');
+
+                case 403:
+                    throw new \GoWeb\ClientAPI\Request\Exception\WrongTokenSpecified('Token not found or expired');
+
+                case 406:
+                    throw new \GoWeb\ClientAPI\Request\Exception\OtherDeviceAuthrorized('Token was previously deleted because other device join to same service');
+
+                default:
+                    throw new \GoWeb\ClientAPI\Request\Exception\Common('Service return responce code ' . $e->getResponse()->getStatusCode());
+            }
+        });
     }
 
     /**
@@ -65,7 +124,7 @@ class ClientAPI extends \Sokil\Rest\Client\Factory
      * 
      * @param string $queryName name of query
      * @return GoWeb\ClientAPI\Query
-     * @throws \GoWeb\ClientAPI\Query\Exception
+     * @throws \GoWeb\ClientAPI\Request\Exception
      */
     public function query($queryName)
     {        

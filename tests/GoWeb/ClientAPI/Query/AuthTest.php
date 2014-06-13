@@ -1,13 +1,13 @@
 <?php
 
-namespace GoWeb\ClientAPI\Query;
+namespace GoWeb\ClientAPI\Request;
 
 class AuthTest extends \Guzzle\Tests\GuzzleTestCase
 {    
     public function testAutoAuthWithDemoCredentials()
     {
         $clientApi = new \GoWeb\ClientAPI(array(
-            'apiServerUrl'  => 'https://tvapi.goweb.com/1.0',
+            'apiServerUrl'  => 'http://api.mw/1.0',
             'cacheAdapter'  => new \GoWeb\ClientAPI\CacheAdapterMock,
         ));
         
@@ -21,12 +21,12 @@ class AuthTest extends \Guzzle\Tests\GuzzleTestCase
     }
     
     /**
-     * @expectedException \GoWeb\ClientAPI\Query\Auth\Exception\WrongCredentials
+     * @expectedException \GoWeb\ClientAPI\Request\Auth\Exception\WrongCredentials
      */
     public function testAuthWithWrongCredentials()
     {
         $clientApi = new \GoWeb\ClientAPI(array(
-            'apiServerUrl'  => 'https://tvapi.goweb.com/1.0',
+            'apiServerUrl'  => 'http://api.mw/1.0',
             'cacheAdapter'  => new \GoWeb\ClientAPI\CacheAdapterMock,
         ));
         
