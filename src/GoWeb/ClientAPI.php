@@ -95,7 +95,7 @@ class ClientAPI extends \Sokil\Rest\Client\Factory
                     throw new \GoWeb\ClientAPI\Request\Exception\OtherDeviceAuthrorized('Token was previously deleted because other device join to same service');
 
                 default:
-                    throw new \GoWeb\ClientAPI\Request\Exception\Common('Service return responce code ' . $e->getResponse()->getStatusCode());
+                    throw new \GoWeb\ClientAPI\Request\Exception\Common('Service return responce code ' . $event['response']->getStatusCode());
             }
         });
     }
