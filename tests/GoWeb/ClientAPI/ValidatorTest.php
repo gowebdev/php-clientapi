@@ -86,4 +86,58 @@ class ValidatorTest extends \Guzzle\Tests\GuzzleTestCase
             }
         }
     }
+
+    public function testAuthFieldOverMaxLength()
+    {
+        $client = array(
+            "error" => 0,
+            "profile" => array(
+                "email" => "demoasdKAJS32lLKNjknsjasjdnasl@domain.com",
+            ),
+
+        );
+
+        // mock response
+        $this->_clientAPI->addSubscriber(new \Guzzle\Plugin\Mock\MockPlugin(array(
+            // auth
+            new \Guzzle\Http\Message\Response(200, array(
+                'Content-type' => 'application/json',
+            ), json_encode($client)),
+        )));
+
+        $validator = new ValidatorWrapper($this->_clientAPI);
+        $validator->checkAuth();
+        $reports = $validator->getReport();
+
+        foreach ($reports as $report) {
+            $this->assertEquals($report['profile']['email'][0], $validator::ERROR_TYPE_FIELD_OVERLENGTHLIMIT);
+        }
+    }
+
+    public function testAuthWrongDateFormat()
+    {
+        $client = array(
+            "error" => 0,
+            "profile" => array(
+                "birthday" => "19651129",
+            ),
+
+        );
+
+        // mock response
+        $this->_clientAPI->addSubscriber(new \Guzzle\Plugin\Mock\MockPlugin(array(
+            // auth
+            new \Guzzle\Http\Message\Response(200, array(
+                'Content-type' => 'application/json',
+            ), json_encode($client)),
+        )));
+
+        $validator = new ValidatorWrapper($this->_clientAPI);
+        $validator->checkAuth();
+        $reports = $validator->getReport();
+
+        foreach ($reports as $report) {
+            $this->assertEquals($report['profile']['birthday'][0], $validator::ERROR_TYPE_FIELD_WRONGDATEFORMAT);
+        }
+    }
 }
