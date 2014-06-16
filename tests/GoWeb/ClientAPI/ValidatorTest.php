@@ -110,7 +110,7 @@ class ValidatorTest extends \Guzzle\Tests\GuzzleTestCase
         $reports = $validator->getReport();
 
         foreach ($reports as $report) {
-            $this->assertEquals($report['profile']['email'][0], $validator::ERROR_TYPE_FIELD_OVERLENGTHLIMIT);
+            $this->assertEquals($report['profile.email'][0], $validator::ERROR_TYPE_FIELD_OVERLENGTHLIMIT);
         }
     }
 
@@ -137,7 +137,7 @@ class ValidatorTest extends \Guzzle\Tests\GuzzleTestCase
         $reports = $validator->getReport();
 
         foreach ($reports as $report) {
-            $this->assertEquals($report['profile']['birthday'][0], $validator::ERROR_TYPE_FIELD_WRONGDATEFORMAT);
+            $this->assertEquals($report['profile.birthday'][0], $validator::ERROR_TYPE_FIELD_WRONGDATEFORMAT);
         }
     }
 }
