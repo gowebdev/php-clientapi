@@ -1,6 +1,6 @@
 <?php
 
-namespace GoWeb\ClientAPI\Query;
+namespace GoWeb\ClientAPI\Request;
 
 class ServicesTest extends \Guzzle\Tests\GuzzleTestCase
 {
@@ -44,16 +44,22 @@ class ServicesTest extends \Guzzle\Tests\GuzzleTestCase
             "time" => 1400770622
         );
         
-        $clientApi = new \GoWeb\ClientAPI('http://api.mw/1.0');
+        $clientApi = new \GoWeb\ClientAPI('http://apiserver.com/1.0');
         $clientApi->addSubscriber(new \Guzzle\Plugin\Mock\MockPlugin(array(
+            // auth
+            new \Guzzle\Http\Message\Response(200, array(
+                'Content-type' => 'application/json',
+            ), json_encode(array('error' => 0))),
+            // services
             new \Guzzle\Http\Message\Response(200, array(
                 'Content-type' => 'application/json',
             ), json_encode($response)),
         )));
         
-        $meta = $clientApi->createRequest('Services')->send();
+        $request = $clientApi->createRequest('Services');
+        $services = $request->send();
         
-        $this->assertEquals($response['packets'], $meta->getPackets());
-        $this->assertEquals($response['channels'], $meta->getChannels());
+        $this->assertEquals($response['packets'], $services->getPackets());
+        $this->assertEquals($response['channels'], $services->getChannels());
     }
 }

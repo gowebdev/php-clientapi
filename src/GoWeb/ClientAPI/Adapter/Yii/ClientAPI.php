@@ -43,7 +43,7 @@ class ClientAPI  extends \GoWeb\ClientAPI  implements \IApplicationComponent
     
     public function exceptionHandler($event)
     {
-        if(!($event->exception instanceof \GoWeb\ClientAPI\Query\Exception\OtherDeviceAuthrorized)) {
+        if(!($event->exception instanceof \GoWeb\ClientAPI\Request\Exception\OtherDeviceAuthrorized)) {
             return;
         }
             

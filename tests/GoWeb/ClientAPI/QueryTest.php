@@ -80,36 +80,14 @@ class QueryTest extends \Guzzle\Tests\GuzzleTestCase
         
         $this->_clientAPI->setActiveUser($client);
     }
-
-    public function testGetCachedWithModificationChecking_NotModified() {
-
-        /**
-         * Request model
-         */
-        $query = $this->_clientAPI->createRequest('Films');
-        $model = $query->send();
-
-        $this->assertEquals('MISS from GuzzleCache', $query->getRawResponse()->getHeader('X-Cache'));
-        
-        $this->assertNotEmpty($model->get('total_items'));
-
-        /**
-         * Request from cache
-         */
-        $query = $this->_clientAPI->createRequest('Films');
-        $model = $query->send();
-
-        $this->assertEquals('HIT from GuzzleCache', $query->getRawResponse()->getHeader('X-Cache'));
-        $this->assertNotEmpty($model->get('total_items'));
-    }
     
     public function testSetParam()
     {
         $query = $this->_clientAPI->createRequest('Films');
         
-        $query->setParam('query', 'matrix');
-        $query->setParam('quality.HD', 1);
-        $query->setParam('quality.SD', 0);
+        $query->setQueryParam('query', 'matrix');
+        $query->setQueryParam('quality.HD', 1);
+        $query->setQueryParam('quality.SD', 0);
 
         $this->assertEquals(array(
             'query'     => 'matrix',
@@ -117,7 +95,7 @@ class QueryTest extends \Guzzle\Tests\GuzzleTestCase
                 'HD'    => 1,
                 'SD'    => 0,
             ),
-        ), $query->toArray());
+        ), $query->getQueryParams());
     }
     
     public function testAppendAuthTokenHeader()
