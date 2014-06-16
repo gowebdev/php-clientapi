@@ -18,7 +18,7 @@ class Validator
     const ERROR_TYPE_FIELD_WRONGDATEFORMAT = 9;
 
     // preset data
-    private $presets = array(
+    private $_presets = array(
 
         'status' => array(
             0 => 'Authorization successfull',
@@ -38,7 +38,9 @@ class Validator
             'SUSPENDED',
             'BLOCKED',
             'CLOSED'
-        ));
+        ),
+        'chargeoffPeriod' => array('DAILY','MONTHLY')
+    );
 
     /**
      *
@@ -187,7 +189,7 @@ class Validator
                 $this->recordError($url, 'status', self::ERROR_TYPE_FIELD_MUSTBEINT);
             }
 
-            if (!in_array($response['status'], $this->presets['status'])) {
+            if (!in_array($response['status'], $this->_presets['status'])) {
                 $this->recordError($url, 'status', self::ERROR_TYPE_FIELD_OUTOFRANGE);
             }
         }
@@ -218,7 +220,7 @@ class Validator
             $this->recordError($url, 'baseServices', self::ERROR_TYPE_FIELD_REQUIRED);
 
         } else {
-            // @TODO: check balance fields
+            $this->_checkClientBaseService($response['baseServices']);
         }
 
         // activeBaseService
@@ -302,7 +304,7 @@ class Validator
             if (!is_string($profile['gender'])) {
                 $this->recordError($url, array('profile' => 'gender'), self::ERROR_TYPE_FIELD_MUSTBESTRING);
 
-            } elseif (!in_array($profile['gender'], $this->presets['gender'])) {
+            } elseif (!in_array($profile['gender'], $this->_presets['gender'])) {
                 $this->recordError($url, array('profile' => 'gender'), self::ERROR_TYPE_FIELD_OUTOFRANGE);
             }
         }
@@ -335,7 +337,7 @@ class Validator
         } elseif (!is_string($profile['status'])) {
             $this->recordError($url, array('profile' => 'status'), self::ERROR_TYPE_FIELD_MUSTBESTRING);
 
-        } elseif (!in_array($profile['status'], $this->presets['profileStatus'])) {
+        } elseif (!in_array($profile['status'], $this->_presets['profileStatus'])) {
             $this->recordError($url, array('profile' => 'status'), self::ERROR_TYPE_FIELD_OUTOFRANGE);
         }
 
@@ -367,6 +369,218 @@ class Validator
         } elseif (!is_string($balance['currency'])) {
             $this->recordError($this->_lastRequestedUrl, array('balance' => 'currency'), self::ERROR_TYPE_FIELD_MUSTBESTRING);
         }
+    }
+
+    private function _checkClientBaseService(array $baseServices)
+    {
+        foreach ($baseServices as $baseService) {
+
+            // id
+            if (!isset($baseService['id'])) {
+                $this->recordError($this->_lastRequestedUrl, array('baseService' => 'id'), self::ERROR_TYPE_FIELD_REQUIRED);
+
+            } elseif (!is_int($baseService['id'])) {
+                $this->recordError($this->_lastRequestedUrl, array('baseService' => 'id'), self::ERROR_TYPE_FIELD_MUSTBEINT);
+            }
+
+            // custom_name
+            if (!isset($baseService['custom_name'])) {
+                $this->recordError($this->_lastRequestedUrl, array('baseService' => 'custom_name'), self::ERROR_TYPE_FIELD_REQUIRED);
+
+            } elseif (!is_string($baseService['custom_name'])) {
+                $this->recordError($this->_lastRequestedUrl, array('baseService' => 'custom_name'), self::ERROR_TYPE_FIELD_MUSTBESTRING);
+            }
+
+            // service_id
+            if (!isset($baseService['service_id'])) {
+                $this->recordError($this->_lastRequestedUrl, array('baseService' => 'service_id'), self::ERROR_TYPE_FIELD_REQUIRED);
+
+            } elseif (!is_int($baseService['service_id'])) {
+                $this->recordError($this->_lastRequestedUrl, array('baseService' => 'service_id'), self::ERROR_TYPE_FIELD_MUSTBEINT);
+            }
+
+            // name
+            if (!isset($baseService['name'])) {
+                $this->recordError($this->_lastRequestedUrl, array('baseService' => 'name'), self::ERROR_TYPE_FIELD_REQUIRED);
+
+            } elseif (!is_string($baseService['name'])) {
+                $this->recordError($this->_lastRequestedUrl, array('baseService' => 'name'), self::ERROR_TYPE_FIELD_MUSTBESTRING);
+            }
+
+            // cost
+            if (!isset($baseService['cost'])) {
+                $this->recordError($this->_lastRequestedUrl, array('baseService' => 'cost'), self::ERROR_TYPE_FIELD_REQUIRED);
+
+            } elseif (!is_float($baseService['cost'])) {
+                $this->recordError($this->_lastRequestedUrl, array('baseService' => 'cost'), self::ERROR_TYPE_FIELD_MUSTBEFLOAT);
+            }
+
+            // total_cost
+            if (!isset($baseService['total_cost'])) {
+                $this->recordError($this->_lastRequestedUrl, array('baseService' => 'total_cost'), self::ERROR_TYPE_FIELD_REQUIRED);
+
+            } elseif (!is_float($baseService['total_cost'])) {
+                $this->recordError($this->_lastRequestedUrl, array('baseService' => 'total_cost'), self::ERROR_TYPE_FIELD_MUSTBEFLOAT);
+            }
+
+            // total_monthly_cost
+            if (!isset($baseService['total_monthly_cost'])) {
+                $this->recordError($this->_lastRequestedUrl, array('baseService' => 'total_monthly_cost'), self::ERROR_TYPE_FIELD_REQUIRED);
+
+            } elseif (!is_float($baseService['total_monthly_cost'])) {
+                $this->recordError($this->_lastRequestedUrl, array('baseService' => 'total_monthly_cost'), self::ERROR_TYPE_FIELD_MUSTBEFLOAT);
+            }
+
+            // chargeoff_period
+            if (!isset($baseService['chargeoff_period'])) {
+                $this->recordError($this->_lastRequestedUrl, array('baseService' => 'chargeoff_period'), self::ERROR_TYPE_FIELD_REQUIRED);
+
+            } elseif (!is_string($baseService['chargeoff_period'])) {
+                $this->recordError($this->_lastRequestedUrl, array('baseService' => 'chargeoff_period'), self::ERROR_TYPE_FIELD_MUSTBESTRING);
+
+            } elseif (!in_array($baseService['chargeoff_period'], $this->_presets['chargeoffPeriod'])) {
+                $this->recordError($this->_lastRequestedUrl, array('baseService' => 'chargeoff_period'), self::ERROR_TYPE_FIELD_OUTOFRANGE);
+            }
+
+            // additional
+            if (isset($baseService['additional'])) {
+                $this->_checkAdditionalService($baseService['additional']);
+            }
+
+            // total_costyes
+            if (isset($baseService['total_costyes']) && !is_float($baseService['total_costyes'])) {
+                $this->recordError($this->_lastRequestedUrl, array('baseService' => 'total_costyes'), self::ERROR_TYPE_FIELD_MUSTBEFLOAT);
+            }
+
+            // ad
+            if (isset($baseService['ad']) && !is_bool($baseService['ad'])) {
+                $this->recordError($this->_lastRequestedUrl, array('baseService' => 'ad'), self::ERROR_TYPE_FIELD_MUSTBEBOOL);
+            }
+
+            // catchup
+            if (isset($baseService['catchup']) && !is_bool($baseService['catchup'])) {
+                $this->recordError($this->_lastRequestedUrl, array('baseService' => 'catchup'), self::ERROR_TYPE_FIELD_MUSTBEBOOL);
+            }
+
+            // stb
+            if (isset($baseService['stb']) && !is_array($baseService['stb'])) {
+                $this->recordError($this->_lastRequestedUrl, array('baseService' => 'stb'), self::ERROR_TYPE_FIELD_MUSTBEARRAY);
+            }
+
+        }
+    }
+
+    private function _checkAdditionalService($additionalService)
+    {
+        // id
+        if (!isset($additionalService['id'])) {
+            $this->recordError($this->_lastRequestedUrl,
+                array(
+                    'baseService' => array(
+                        'additionalService' => 'id'
+                    )
+                ),
+                self::ERROR_TYPE_FIELD_REQUIRED);
+
+        } elseif (!is_int($additionalService['id'])) {
+            $this->recordError($this->_lastRequestedUrl,
+                array(
+                    'baseService' => array(
+                        'additionalService' => 'id'
+                    )
+                ),
+                self::ERROR_TYPE_FIELD_MUSTBEINT);
+        }
+
+        // service_id
+        if (!isset($additionalService['service_id'])) {
+            $this->recordError($this->_lastRequestedUrl,
+                array(
+                    'baseService' => array(
+                        'additionalService' => 'service_id'
+                    )
+                ),
+                self::ERROR_TYPE_FIELD_REQUIRED);
+
+        } elseif (!is_int($additionalService['service_id'])) {
+            $this->recordError($this->_lastRequestedUrl,
+                array(
+                    'baseService' => array(
+                        'additionalService' => 'service_id'
+                    )
+                ),
+                self::ERROR_TYPE_FIELD_MUSTBEINT);
+        }
+
+        // custom_name
+        if (!isset($additionalService['custom_name'])) {
+            $this->recordError($this->_lastRequestedUrl,
+                array(
+                    'baseService' => array(
+                        'additionalService' => 'custom_name'
+                    )
+                ),
+                self::ERROR_TYPE_FIELD_REQUIRED);
+
+        } elseif (!is_string($additionalService['custom_name'])) {
+            $this->recordError($this->_lastRequestedUrl,
+                array(
+                    'baseService' => array(
+                        'additionalService' => 'custom_name'
+                    )
+                ),
+                self::ERROR_TYPE_FIELD_MUSTBESTRING);
+        }
+
+        // cost
+        if (!isset($additionalService['cost'])) {
+            $this->recordError($this->_lastRequestedUrl,
+                array(
+                    'baseService' => array(
+                        'additionalService' => 'cost'
+                    )
+                ),
+                self::ERROR_TYPE_FIELD_REQUIRED);
+
+        } elseif (!is_float($additionalService['cost'])) {
+            $this->recordError($this->_lastRequestedUrl,
+                array(
+                    'baseService' => array(
+                        'additionalService' => 'cost'
+                    )
+                ),
+                self::ERROR_TYPE_FIELD_MUSTBEFLOAT);
+        }
+
+        // chargeoff_period
+        if (!isset($additionalService['chargeoff_period'])) {
+            $this->recordError($this->_lastRequestedUrl,
+                array(
+                    'baseService' => array(
+                        'additionalService' => 'chargeoff_period'
+                    )
+                ),
+                self::ERROR_TYPE_FIELD_REQUIRED);
+
+        } elseif (!is_string($additionalService['chargeoff_period'])) {
+            $this->recordError($this->_lastRequestedUrl,
+                array(
+                    'baseService' => array(
+                        'additionalService' => 'chargeoff_period'
+                    )
+                ),
+                self::ERROR_TYPE_FIELD_MUSTBESTRING);
+
+        } elseif (!in_array($additionalService['chargeoff_period'], $this->_presets['chargeoffPeriod'])) {
+            $this->recordError($this->_lastRequestedUrl,
+                array(
+                    'baseService' => array(
+                        'additionalService' => 'chargeoff_period'
+                    )
+                ),
+                self::ERROR_TYPE_FIELD_OUTOFRANGE);
+        }
+
     }
     
     private function _checkChannelsList()
