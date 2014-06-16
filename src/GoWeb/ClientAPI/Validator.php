@@ -204,7 +204,7 @@ class Validator
             $this->recordError($url, 'profile', self::ERROR_TYPE_FIELD_REQUIRED);
 
         } else {
-            $this->_checkProfileDictionary($response['profile'], $url);
+            $this->_checkProfileDictionary($response['profile']);
         }
 
         // balance
@@ -250,62 +250,62 @@ class Validator
 
     }
 
-    private function _checkProfileDictionary(array $profile, $url)
+    private function _checkProfileDictionary(array $profile)
     {
         // id
         if (!isset($profile['id'])) {
-            $this->recordError($url, array('profile' => 'id'), self::ERROR_TYPE_FIELD_REQUIRED);
+            $this->recordError($this->_lastRequestedUrl, array('profile' => 'id'), self::ERROR_TYPE_FIELD_REQUIRED);
 
         } elseif (!is_int($profile['id'])) {
-            $this->recordError($url, array('profile' => 'id'), self::ERROR_TYPE_FIELD_MUSTBEINT);
+            $this->recordError($this->_lastRequestedUrl, array('profile' => 'id'), self::ERROR_TYPE_FIELD_MUSTBEINT);
         }
 
         // email
         if (!isset($profile['email'])) {
-            $this->recordError($url, array('profile' => 'email'), self::ERROR_TYPE_FIELD_REQUIRED);
+            $this->recordError($this->_lastRequestedUrl, array('profile' => 'email'), self::ERROR_TYPE_FIELD_REQUIRED);
 
         } elseif (!is_string($profile['email'])) {
-            $this->recordError($url, array('profile' => 'email'), self::ERROR_TYPE_FIELD_MUSTBESTRING);
+            $this->recordError($this->_lastRequestedUrl, array('profile' => 'email'), self::ERROR_TYPE_FIELD_MUSTBESTRING);
 
         } elseif (strlen($profile['email']) > 40) {
-            $this->recordError($url, array('profile' => 'email'), self::ERROR_TYPE_FIELD_OVERLENGTHLIMIT);
+            $this->recordError($this->_lastRequestedUrl, array('profile' => 'email'), self::ERROR_TYPE_FIELD_OVERLENGTHLIMIT);
         }
 
         // hash
         if (!isset($profile['hash'])) {
-            $this->recordError($url, array('profile' => 'hash'), self::ERROR_TYPE_FIELD_REQUIRED);
+            $this->recordError($this->_lastRequestedUrl, array('profile' => 'hash'), self::ERROR_TYPE_FIELD_REQUIRED);
 
         } elseif (!is_string($profile['hash'])) {
-            $this->recordError($url, array('profile' => 'hash'), self::ERROR_TYPE_FIELD_MUSTBESTRING);
+            $this->recordError($this->_lastRequestedUrl, array('profile' => 'hash'), self::ERROR_TYPE_FIELD_MUSTBESTRING);
         }
 
         // last_name
         if (isset($profile['last_name'])) {
             if (!is_string($profile['last_name'])) {
-                $this->recordError($url, array('profile' => 'last_name'), self::ERROR_TYPE_FIELD_MUSTBESTRING);
+                $this->recordError($this->_lastRequestedUrl, array('profile' => 'last_name'), self::ERROR_TYPE_FIELD_MUSTBESTRING);
 
             } elseif (strlen($profile['last_name']) > 30) {
-                $this->recordError($url, array('profile' => 'last_name'), self::ERROR_TYPE_FIELD_OVERLENGTHLIMIT);
+                $this->recordError($this->_lastRequestedUrl, array('profile' => 'last_name'), self::ERROR_TYPE_FIELD_OVERLENGTHLIMIT);
             }
         }
 
         // first_name
         if (isset($profile['first_name'])) {
             if (!is_string($profile['first_name'])) {
-                $this->recordError($url, array('profile' => 'first_name'), self::ERROR_TYPE_FIELD_MUSTBESTRING);
+                $this->recordError($this->_lastRequestedUrl, array('profile' => 'first_name'), self::ERROR_TYPE_FIELD_MUSTBESTRING);
 
             } elseif (strlen($profile['first_name']) > 30) {
-                $this->recordError($url, array('profile' => 'first_name'), self::ERROR_TYPE_FIELD_OVERLENGTHLIMIT);
+                $this->recordError($this->_lastRequestedUrl, array('profile' => 'first_name'), self::ERROR_TYPE_FIELD_OVERLENGTHLIMIT);
             }
         }
 
         // gender
         if (isset($profile['gender'])) {
             if (!is_string($profile['gender'])) {
-                $this->recordError($url, array('profile' => 'gender'), self::ERROR_TYPE_FIELD_MUSTBESTRING);
+                $this->recordError($this->_lastRequestedUrl, array('profile' => 'gender'), self::ERROR_TYPE_FIELD_MUSTBESTRING);
 
             } elseif (!in_array($profile['gender'], $this->_presets['gender'])) {
-                $this->recordError($url, array('profile' => 'gender'), self::ERROR_TYPE_FIELD_OUTOFRANGE);
+                $this->recordError($this->_lastRequestedUrl, array('profile' => 'gender'), self::ERROR_TYPE_FIELD_OUTOFRANGE);
             }
         }
 
@@ -315,39 +315,39 @@ class Validator
             if (is_string($profile['birthday'])) {
                 $_date = explode('-', $profile['birthday']);
                 if (count($_date) != 3 || !checkdate($_date[1], $_date[2], $_date[0])) {
-                    $this->recordError($url, array('profile' => 'birthday'), self::ERROR_TYPE_FIELD_WRONGDATEFORMAT);
+                    $this->recordError($this->_lastRequestedUrl, array('profile' => 'birthday'), self::ERROR_TYPE_FIELD_WRONGDATEFORMAT);
                 }
             } elseif (!is_int($profile['birthday'])) {
-                $this->recordError($url, array('profile' => 'birthday'), self::ERROR_TYPE_FIELD_MUSTBEINT);
+                $this->recordError($this->_lastRequestedUrl, array('profile' => 'birthday'), self::ERROR_TYPE_FIELD_MUSTBEINT);
             }
         }
 
         // contract_number
         if (!isset($profile['contract_number'])) {
-            $this->recordError($url, array('profile' => 'contract_number'), self::ERROR_TYPE_FIELD_REQUIRED);
+            $this->recordError($this->_lastRequestedUrl, array('profile' => 'contract_number'), self::ERROR_TYPE_FIELD_REQUIRED);
 
         } elseif (!is_string($profile['contract_number'])) {
-            $this->recordError($url, array('profile' => 'contract_number'), self::ERROR_TYPE_FIELD_MUSTBESTRING);
+            $this->recordError($this->_lastRequestedUrl, array('profile' => 'contract_number'), self::ERROR_TYPE_FIELD_MUSTBESTRING);
         }
 
         // status
         if (!isset($profile['status'])) {
-            $this->recordError($url, array('profile' => 'status'), self::ERROR_TYPE_FIELD_REQUIRED);
+            $this->recordError($this->_lastRequestedUrl, array('profile' => 'status'), self::ERROR_TYPE_FIELD_REQUIRED);
 
         } elseif (!is_string($profile['status'])) {
-            $this->recordError($url, array('profile' => 'status'), self::ERROR_TYPE_FIELD_MUSTBESTRING);
+            $this->recordError($this->_lastRequestedUrl, array('profile' => 'status'), self::ERROR_TYPE_FIELD_MUSTBESTRING);
 
         } elseif (!in_array($profile['status'], $this->_presets['profileStatus'])) {
-            $this->recordError($url, array('profile' => 'status'), self::ERROR_TYPE_FIELD_OUTOFRANGE);
+            $this->recordError($this->_lastRequestedUrl, array('profile' => 'status'), self::ERROR_TYPE_FIELD_OUTOFRANGE);
         }
 
         // tester
         if (isset($profile['tester'])) {
             if (!is_int($profile['tester'])) {
-                $this->recordError($url, array('profile' => 'tester'), self::ERROR_TYPE_FIELD_MUSTBEINT);
+                $this->recordError($this->_lastRequestedUrl, array('profile' => 'tester'), self::ERROR_TYPE_FIELD_MUSTBEINT);
 
             } elseif (!in_array($profile['tester'], array(0,1))) {
-                $this->recordError($url, array('profile' => 'tester'), self::ERROR_TYPE_FIELD_OUTOFRANGE);
+                $this->recordError($this->_lastRequestedUrl, array('profile' => 'tester'), self::ERROR_TYPE_FIELD_OUTOFRANGE);
             }
         }
     }
