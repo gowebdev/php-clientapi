@@ -4,9 +4,18 @@ namespace GoWeb\ClientAPI;
 
 class Validator
 {
-    const ERROR_TYPE_FIELD_EMPTY = 0;
-    const ERROR_TYPE_FIELD_MUSTBEARRAY = 0;
-    
+    const ERROR_TYPE_FIELD_REQUIRED = 0;
+    const ERROR_TYPE_FIELD_EMPTY = 1;
+    const ERROR_TYPE_FIELD_MUSTBESTRING = 2;
+    const ERROR_TYPE_FIELD_MUSTBEINT = 3;
+    const ERROR_TYPE_FIELD_MUSTBEBOOL = 4;
+    const ERROR_TYPE_FIELD_MUSTBEARRAY = 5;
+    const ERROR_TYPE_FIELD_MUSTBEFLOAT = 6;
+    const ERROR_TYPE_FIELD_OUTOFRANGE = 7;
+    const ERROR_TYPE_FIELD_OVERLENGTHLIMIT = 8;
+    const ERROR_TYPE_FIELD_WRONGDATEFORMAT = 9;
+    const ERROR_TYPE_FIELD_MUSTBETIMESTAMP = 10;
+
     /**
      *
      * @var \GoWeb\ClientAPI
@@ -108,9 +117,76 @@ class Validator
         
     }
     
-    private function _checkChannelsEpg()
+    protected  function _checkChannelsEpg()
     {
-        
+        $url = '/channels/epg';
+
+        // response
+        $response = $this->_clientAPI
+            ->createRequest('Epg')
+            ->getResponse()
+            ->toArray();
+
+        // validation errors
+        if (!isset($response['epg'])) {
+            $this->recordError($url, 'epg', self::ERROR_TYPE_FIELD_REQUIRED);
+
+        } elseif (!is_array($response['epg'])) {
+            $this->recordError($url, 'epg', self::ERROR_TYPE_FIELD_MUSTBEARRAY);
+
+        } else {
+            foreach ($response['epg'] as $epg) {
+
+                if (!is_array($epg)) {
+                    $this->recordError($url, 'epg', self::ERROR_TYPE_FIELD_MUSTBEARRAY);
+                    continue;
+                }
+
+                foreach ($epg as $program) {
+
+                    if (!is_array($program)) {
+                        $this->recordError($url, 'epg', self::ERROR_TYPE_FIELD_MUSTBEARRAY);
+                        continue;
+                    }
+
+                    // name
+                    if (!isset($program['name'])) {
+                        $this->recordError($url, 'epg.name', self::ERROR_TYPE_FIELD_REQUIRED);
+
+                    } elseif (!is_string($program['name'])) {
+                        $this->recordError($url, 'epg.name', self::ERROR_TYPE_FIELD_MUSTBESTRING);
+                    }
+
+                    // from
+                    if (!isset($program['from'])) {
+                        $this->recordError($url, 'epg.from', self::ERROR_TYPE_FIELD_REQUIRED);
+
+                    } elseif ((string)(int)$program['from'] !== (string)$program['from']) {
+                        $this->recordError($url, 'epg.from', self::ERROR_TYPE_FIELD_MUSTBETIMESTAMP);
+
+                    }
+
+                    // to
+                    if (!isset($program['to'])) {
+                        $this->recordError($url, 'epg.to', self::ERROR_TYPE_FIELD_REQUIRED);
+
+                    } elseif ((string)(int)$program['to'] !== (string)$program['to']) {
+                        $this->recordError($url, 'epg.to', self::ERROR_TYPE_FIELD_MUSTBETIMESTAMP);
+                    }
+
+                    // url
+                    if (isset($program['url']) && !is_string($program['url'])) {
+                        $this->recordError($url, 'epg.url', self::ERROR_TYPE_FIELD_MUSTBESTRING);
+                    }
+
+                    // torrent
+                    if (isset($program['torrent']) && !is_string($program['torrent'])) {
+                        $this->recordError($url, 'epg.torrent', self::ERROR_TYPE_FIELD_MUSTBESTRING);
+                    }
+
+                }
+            }
+        }
     }
     
     private function _checkVodFeed()
