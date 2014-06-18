@@ -359,7 +359,7 @@ class Validator
         if (!isset($balance['amount'])) {
             $this->recordError($this->_lastRequestedUrl, 'balance.amount', self::ERROR_TYPE_FIELD_REQUIRED);
 
-        } elseif (!is_float($balance['amount'])) {
+        } elseif (!is_numeric($balance['amount'])) {
             $this->recordError($this->_lastRequestedUrl, 'balance.amount', self::ERROR_TYPE_FIELD_MUSTBEFLOAT);
         }
 
@@ -412,7 +412,7 @@ class Validator
             if (!isset($baseService['cost'])) {
                 $this->recordError($this->_lastRequestedUrl, 'baseServices.cost', self::ERROR_TYPE_FIELD_REQUIRED);
 
-            } elseif (!is_float($baseService['cost'])) {
+            } elseif (!is_numeric($baseService['cost'])) {
                 $this->recordError($this->_lastRequestedUrl, 'baseServices.cost', self::ERROR_TYPE_FIELD_MUSTBEFLOAT);
             }
 
@@ -420,7 +420,7 @@ class Validator
             if (!isset($baseService['total_cost'])) {
                 $this->recordError($this->_lastRequestedUrl, 'baseServices.total_cost', self::ERROR_TYPE_FIELD_REQUIRED);
 
-            } elseif (!is_float($baseService['total_cost'])) {
+            } elseif (!is_numeric($baseService['total_cost'])) {
                 $this->recordError($this->_lastRequestedUrl, 'baseServices.total_cost', self::ERROR_TYPE_FIELD_MUSTBEFLOAT);
             }
 
@@ -428,7 +428,7 @@ class Validator
             if (!isset($baseService['total_monthly_cost'])) {
                 $this->recordError($this->_lastRequestedUrl, 'baseServices.total_monthly_cost', self::ERROR_TYPE_FIELD_REQUIRED);
 
-            } elseif (!is_float($baseService['total_monthly_cost'])) {
+            } elseif (!is_numeric($baseService['total_monthly_cost'])) {
                 $this->recordError($this->_lastRequestedUrl, 'baseServices.total_monthly_cost', self::ERROR_TYPE_FIELD_MUSTBEFLOAT);
             }
 
@@ -511,7 +511,7 @@ class Validator
             if (!isset($additional['cost'])) {
                 $this->recordError($this->_lastRequestedUrl, 'baseServices.additional.cost', self::ERROR_TYPE_FIELD_REQUIRED);
 
-            } elseif (!is_float($additional['cost'])) {
+            } elseif (!is_numeric($additional['cost'])) {
                 $this->recordError($this->_lastRequestedUrl, 'baseServices.additional.cost', self::ERROR_TYPE_FIELD_MUSTBEFLOAT);
             }
 

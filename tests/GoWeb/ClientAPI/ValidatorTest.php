@@ -77,9 +77,9 @@ class ValidatorTest extends \Guzzle\Tests\GuzzleTestCase
                                     "chargeoff_period" => "DAILY",
                                 ]
                             ],
-                            "cost" => 0.16,
+                            "cost" => 0.00,
                             "total_monthly_cost" => 0.23,
-                            "total_cost" => 0.28,
+                            "total_cost" => "0.28",
                         ],
                         [
                             "id" => 36146,
@@ -87,7 +87,7 @@ class ValidatorTest extends \Guzzle\Tests\GuzzleTestCase
                             "service_id" => 3,
                             "name" => "Basic",
                             "chargeoff_period" => "DAILY",
-                            "cost" => 0.2,
+                            "cost" => 0,
                             "total_monthly_cost" => 3.12,
                             "total_cost" => 0.2
                         ]
@@ -267,7 +267,7 @@ class ValidatorTest extends \Guzzle\Tests\GuzzleTestCase
                         "contract_number" => 0001234567
                     ],
                     "balance" => [
-                        "amount" => "55.9",
+                        "amount" => "amount",
                         "currency" => 123
                     ],
                     "baseServices" => [
@@ -281,9 +281,9 @@ class ValidatorTest extends \Guzzle\Tests\GuzzleTestCase
                             "chargeoff_period" => 1,
                             "stb" => "",
                             "additional" => "",
-                            "cost" => "0.16",
-                            "total_monthly_cost" => 0,
-                            "total_cost" => 28,
+                            "cost" => "cost",
+                            "total_monthly_cost" => "total_monthly_cost",
+                            "total_cost" => "total_cost",
                         ],
                         [
                             "id" => 19040,
@@ -299,12 +299,12 @@ class ValidatorTest extends \Guzzle\Tests\GuzzleTestCase
                                     "id" => "36147",
                                     "service_id" => "4",
                                     "custom_name" => ["Sci-Fi"],
-                                    "cost" => "0.12",
+                                    "cost" => "cost",
                                     "chargeoff_period" => 0,
                                 ]
                             ],
-                            "cost" => 0.16,
-                            "total_monthly_cost" => 0.1,
+                            "cost" => 0.00,
+                            "total_monthly_cost" => "0.1",
                             "total_cost" => 0.28,
                         ],
                     ],
