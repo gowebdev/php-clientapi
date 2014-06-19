@@ -14,10 +14,7 @@ class ValidatorWrapper extends Validator
     public function checkChannelsList() {
         $this->_checkChannelsList();
     }
-}
-
-class ValidatorWrapper extends Validator
-{
+    
     public function checkChannelsEpg() {
         $this->_checkChannelsEpg();
     }
@@ -26,55 +23,6 @@ class ValidatorWrapper extends Validator
 class ValidatorTest extends \Guzzle\Tests\GuzzleTestCase 
 {
     protected $_clientAPI;
-
-    protected $_demoUser;
-
-    public function setUp()
-    {
-        // configure client api
-        $this->_clientAPI = new \GoWeb\ClientAPI(array(
-            'apiServerUrl'  => 'http://dkjglkdsfjgkldsfjgkldsfjglkdsfjglkdfsgjldksfjgkldfg.com/1.0/',
-            'cacheAdapter' => new CacheAdapterMock,
-        ));
-
-        $this->_demoUser =  array(
-            "error" => 0,
-            "token" => "5440644e27a3259da3feaab416f37cee06d12569",
-            "status" => 0,
-            "balance" => array(
-                "amount" => 0,
-                "currency" => "EUR"
-            ),
-            "profile" => array(
-                "id" => 0,
-                "first_name" => "Гість",
-                "last_name" => "",
-                "contract_number" => 0,
-                "status" => "ACTIVE"
-            ),
-            "baseServices" => [
-                array(
-                    "id" => 0,
-                    "service_id" => 6,
-                    "name" => "Рекламний",
-                    "cost" => 0,
-                    "catchup" => 0,
-                    "ad" => 1,
-                    "total_cost" => 0
-                )
-            ],
-            "speed" => array(
-                "120KB" => "120 килобит в секунду",
-                "512KB" => "512 килобит в секунду",
-                "1MB" => "1 мегабит в секунду",
-                "2MB" => "2 мегабита в секунду",
-                "8MB" => "8 мегабит в секунду",
-                "36MB" => "36 мегабит в секунду"
-            ),
-            "time" => 1402652985
-        );
-    }
-
 
     protected $_demoUser;
 

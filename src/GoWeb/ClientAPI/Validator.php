@@ -16,6 +16,7 @@ class Validator
     const ERROR_TYPE_FIELD_OUTOFRANGE = 7;
     const ERROR_TYPE_FIELD_OVERLENGTHLIMIT = 8;
     const ERROR_TYPE_FIELD_WRONGDATEFORMAT = 9;
+    const ERROR_TYPE_FIELD_MUSTBETIMESTAMP = 10;
 
     // preset data
     private $_presets = array(
@@ -753,7 +754,7 @@ class Validator
         }
     }
     
-    protected  function _checkChannelsEpg()
+    protected function _checkChannelsEpg()
     {
         $url = '/channels/epg';
 
