@@ -991,8 +991,86 @@ class Validator
         }
     }
     
-    private function _checkVodCategories()
+    protected function _checkVodCategories()
     {
-        
+        $url = '/vod/genres';
+
+        // response
+        $response = $this->_clientAPI
+            ->createRequest('FilmCategories')
+            ->getResponse()
+            ->toArray();
+
+        // validation errors
+        if (!isset($response['categories'])) {
+            $this->recordError($url, 'categories', self::ERROR_TYPE_FIELD_REQUIRED);
+
+        } elseif (!is_array($response['categories'])) {
+            $this->recordError($url, 'categories', self::ERROR_TYPE_FIELD_MUSTBEARRAY);
+
+        } else {
+
+            if (count($response['categories']) < 1) {
+                $this->recordError($url, 'categories.id', self::ERROR_TYPE_FIELD_REQUIRED);
+                $this->recordError($url, 'categories.name', self::ERROR_TYPE_FIELD_REQUIRED);
+            }
+
+            foreach ($response['categories'] as $cat) {
+                if (!is_array($cat)) {
+                    $this->recordError($url, 'categories', self::ERROR_TYPE_FIELD_MUSTBEARRAY);
+                    continue;
+                }
+
+                // id
+                if (!isset($cat['id'])) {
+                    $this->recordError($url, 'categories.id', self::ERROR_TYPE_FIELD_REQUIRED);
+
+                } elseif ((string)(int)$cat['id'] !== (string)$cat['id']) {
+                    $this->recordError($url, 'categories.id', self::ERROR_TYPE_FIELD_MUSTBEINT);
+                }
+
+                // name
+                if (!isset($cat['name'])) {
+                    $this->recordError($url, 'categories.name', self::ERROR_TYPE_FIELD_REQUIRED);
+
+                } elseif (!is_string($cat['name'])) {
+                    $this->recordError($url, 'categories.name', self::ERROR_TYPE_FIELD_MUSTBESTRING);
+                }
+
+                // genres
+                if (isset($cat['genres'])) {
+
+                    if (!is_array($cat['genres'])) {
+                        $this->recordError($url, 'categories.genres', self::ERROR_TYPE_FIELD_MUSTBEARRAY);
+
+                    } else {
+
+                        foreach ($cat['genres'] as $genre) {
+
+                            if (!is_array($genre)) {
+                                $this->recordError($url, 'categories.genres', self::ERROR_TYPE_FIELD_MUSTBEARRAY);
+                                continue;
+                            }
+
+                            // id
+                            if (!isset($genre['id'])) {
+                                $this->recordError($url, 'categories.genres.id', self::ERROR_TYPE_FIELD_REQUIRED);
+
+                            } elseif ((string)(int)$genre['id'] !== (string)$genre['id']) {
+                                $this->recordError($url, 'categories.genres.id', self::ERROR_TYPE_FIELD_MUSTBEINT);
+                            }
+
+                            // name
+                            if (!isset($genre['name'])) {
+                                $this->recordError($url, 'categories.genres.name', self::ERROR_TYPE_FIELD_REQUIRED);
+
+                            } elseif (!is_string($genre['name'])) {
+                                $this->recordError($url, 'categories.genres.name', self::ERROR_TYPE_FIELD_MUSTBESTRING);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
