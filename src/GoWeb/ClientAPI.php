@@ -25,8 +25,6 @@ class ClientAPI extends \Sokil\Rest\Client\Factory
     
     private $_meta;
 
-    private $_services;
-
     public function __construct($options = null)
     {
         if(is_array($options)) {

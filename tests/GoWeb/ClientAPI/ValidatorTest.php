@@ -70,7 +70,7 @@ class ValidatorTest extends \Guzzle\Tests\GuzzleTestCase
     public function testSetUnexistedHost()
     {
         $validator = $this->_clientAPI->getValidator();
-        $validator->isValid();
+            $validator->isValid();
     }
 
     public function testServicesValidFields()
