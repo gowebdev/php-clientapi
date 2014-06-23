@@ -127,10 +127,6 @@ class ValidatorTest extends \Guzzle\Tests\GuzzleTestCase
 
         // mock response
         $this->_clientAPI->addSubscriber(new \Guzzle\Plugin\Mock\MockPlugin(array(
-            // auth
-            new \Guzzle\Http\Message\Response(200, array(
-                'Content-type' => 'application/json',
-            ), json_encode($this->_demoUser)),
 
             // services
             new \Guzzle\Http\Message\Response(200, array(
@@ -147,10 +143,6 @@ class ValidatorTest extends \Guzzle\Tests\GuzzleTestCase
     {
         // mock response
         $this->_clientAPI->addSubscriber(new \Guzzle\Plugin\Mock\MockPlugin(array(
-            // auth
-            new \Guzzle\Http\Message\Response(200, array(
-                'Content-type' => 'application/json',
-            ), json_encode($this->_demoUser)),
 
             // incorrect data services
             new \Guzzle\Http\Message\Response(200, array(
@@ -194,10 +186,6 @@ class ValidatorTest extends \Guzzle\Tests\GuzzleTestCase
     {
         // mock response
         $this->_clientAPI->addSubscriber(new \Guzzle\Plugin\Mock\MockPlugin(array(
-            // auth
-            new \Guzzle\Http\Message\Response(200, array(
-                'Content-type' => 'application/json',
-            ), json_encode($this->_demoUser)),
 
             // globals
             new \Guzzle\Http\Message\Response(200, array(

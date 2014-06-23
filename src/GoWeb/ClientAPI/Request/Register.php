@@ -6,6 +6,8 @@ class Register extends \Sokil\Rest\Client\Request\ReadRequest
 {
     protected $_url = '/users/register';
     
+    protected $_authRequired = true;
+    
     const ERROR_NONE                                    = 0;
     const ERROR_REQUIRED_FIELDS_EMPTY                   = 1;
     const ERROR_EMAIL_ALREADY_REGISTERED                = 2;

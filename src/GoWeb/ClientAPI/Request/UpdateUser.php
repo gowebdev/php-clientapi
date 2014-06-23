@@ -6,6 +6,8 @@ class UpdateUser extends \Sokil\Rest\Client\Request\UpdateRequest
 {
     protected $_url = '/user';
     
+    protected $_authRequired = true;
+    
     public function setUser(\GoWeb\Api\Model\Client $client)
     {
         $this

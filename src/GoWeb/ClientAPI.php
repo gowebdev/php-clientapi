@@ -58,9 +58,11 @@ class ClientAPI extends \Sokil\Rest\Client\Factory
             
             // try to auth if not yet authorised
             if(!$this->isUserAuthorised()) {
+                // use lazy auth if this query is no Query\Auth
                 if(!($request instanceof \GoWeb\ClientAPI\Request\Auth)) {
-                    // use lazy auth if this query is no Query\Auth
-                    $this->auth()->send();                
+                    if($request->isAuthRequired()) {
+                        $this->auth()->send();                
+                    }
                 }
             }
 

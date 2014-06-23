@@ -9,6 +9,8 @@ class RestorePassword extends \Sokil\Rest\Client\Request\ReadRequest
     const REQUEST_PASSWORD_OK           = 0;
     const REQUEST_PASSWORD_WRONG_EMAIL  = 1;
     
+    protected $_authRequired = true;
+    
     public function setEmail($email)
     {
         $this->setQueryParam('email', $email);

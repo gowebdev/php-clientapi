@@ -8,6 +8,8 @@ class Channels extends \Sokil\Rest\Client\Request\ReadRequest
     
     protected $_structureClassName = '\GoWeb\Api\Model\Media\ChannelList'; 
     
+    protected $_authRequired = true;
+    
     public function onlyWithTorrent()
     {
         $this->_query['torrent'] = 1;

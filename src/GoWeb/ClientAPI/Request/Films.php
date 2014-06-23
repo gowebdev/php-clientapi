@@ -8,6 +8,8 @@ class Films extends \Sokil\Rest\Client\Request\ReadRequest
     
     protected $_structureClassName = '\GoWeb\Api\Model\Media\FilmList';
     
+    protected $_authRequired = true;
+    
     public function byId($id)
     {
         if(is_array($id)) {

@@ -8,6 +8,8 @@ class Epg extends \Sokil\Rest\Client\Request\ReadRequest
     
     protected $_structureClassName = '\GoWeb\Api\Model\Media\ChannelPrograms';
     
+    protected $_authRequired = true;
+    
     public function forChannel($channel)
     {
         $this->setQueryParam('channel_id', $channel);
