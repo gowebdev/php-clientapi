@@ -19,7 +19,7 @@ class ClientAPI  extends \GoWeb\ClientAPI  implements \IApplicationComponent
     public $cache = false;
     
     public function init()
-    {        
+    {
         $this->_initialized = true;
         
         // define server url
@@ -39,6 +39,8 @@ class ClientAPI  extends \GoWeb\ClientAPI  implements \IApplicationComponent
         if($this->logger) {
             $this->setLogger(\Yii::app()->{$this->logger});
         }
+        
+        parent::init();
     }  
     
     public function exceptionHandler($event)
