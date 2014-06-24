@@ -2,15 +2,9 @@
 
 namespace GoWeb\ClientAPI\Adapter\Yii;
 
-class ClientAPI  extends \GoWeb\ClientAPI  implements \IApplicationComponent
+class ClientAPI extends \GoWeb\ClientAPI implements \IApplicationComponent
 {
     private $_initialized = false;
-    
-    public $apiServerUrl;
-    
-    public $agent;
-    
-    public $logger;
     
     /**
      *
@@ -20,28 +14,39 @@ class ClientAPI  extends \GoWeb\ClientAPI  implements \IApplicationComponent
     
     public function init()
     {
-        $this->_initialized = true;
-        
-        // define server url
-        $this->setHost( $this->apiServerUrl );
-        
-        // define agent if specified
-        if($this->agent) {
-            $this->setAgent($this->agent);
-        }
-        
-        // define cacher
-        if($this->cache) {
-            $this->setCacheAdapter(new ClientAPICache);
-        }
-        
-        // define logger
-        if($this->logger) {
-            $this->setLogger(\Yii::app()->{$this->logger});
-        }
-        
         parent::init();
-    }  
+        
+        $this->_initialized = true;
+    }
+    
+    public function __set($name, $value)
+    {
+        switch($name) {
+            // define server url
+            case 'apiServerUrl':
+                $this->setHost( $value );
+                break;
+            
+            // define agent if specified
+            case 'agent':
+                $this->setAgent($value);
+                break;
+            
+            // define cacher
+            case 'cache':
+                if($value) {
+                    $this->setCacheAdapter(new ClientAPICache);
+                }
+                break;
+                
+            // define logger
+            case 'logger':
+                if($value) {
+                    $this->setLogger(\Yii::app()->{$value});
+                }
+                break;
+        }
+    }
     
     public function exceptionHandler($event)
     {
