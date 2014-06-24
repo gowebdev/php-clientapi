@@ -23,7 +23,7 @@ class ClientAPI  extends \GoWeb\ClientAPI  implements \IApplicationComponent
         $this->_initialized = true;
         
         // define server url
-        $this->setAPIServerUrl( $this->apiServerUrl );
+        $this->setHost( $this->apiServerUrl );
         
         // define agent if specified
         if($this->agent) {
