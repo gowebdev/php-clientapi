@@ -30,7 +30,7 @@ class ClientAPI extends \Sokil\Rest\Client\Factory
         if(is_array($options)) {
             // server url
             if(isset($options['apiServerUrl'])) {
-                $this->setAPIServerUrl($options['apiServerUrl']);
+                $this->setHost($options['apiServerUrl']);
             }
             // cache
             if(isset($options['cacheAdapter']) && $options['cacheAdapter'] instanceof CacheAdapterInterface) {
